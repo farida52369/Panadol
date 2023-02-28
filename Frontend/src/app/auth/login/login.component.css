@@ -1,0 +1,43 @@
+/*form styles*/
+#tsform {
+  text-align: left;
+  position: relative;
+  border: 1px solid #9999;
+  padding: 0px 17px 0px;
+}
+
+/* input control */
+input:not([type="checkbox"]) {
+  height: 34px;
+}
+
+input,
+input[type="checkbox"] {
+  border: 2px solid #ccc;
+  border-radius: 0px;
+  box-sizing: border-box;
+}
+
+.input-group-text {
+  background-color: #fff;
+  border-radius: 0px;
+  border-left: none;
+}
+
+input,
+input[type="checkbox"],
+.form-label {
+  font-family: montserrat;
+  color: #000000;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.form-label {
+  margin-bottom: 0px;
+}
+
+.a-span-last {
+  margin-right: 0;
+  float: right;
+}

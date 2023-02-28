@@ -1,0 +1,91 @@
+<app-container>
+  <form id="tsform">
+    <h2 class="paragraph">Sign In</h2>
+    <div class="error-message" *ngIf="errorMessage">
+      <span>
+        <i class="fa fa-exclamation-triangle note"></i> &nbsp;
+        <span [innerHTML]="errorMessage"></span>
+      </span>
+    </div>
+    <fieldset>
+      <form
+        [formGroup]="signinEmailForm"
+        (ngSubmit)="checkEmail()"
+        *ngIf="!display"
+      >
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="example@mail.com"
+            (mousedown)="cleanErrorMessage()"
+          />
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!signinEmailForm.valid"
+        >
+          Continue
+        </button>
+      </form>
+    </fieldset>
+    <fieldset>
+      <form
+        [formGroup]="signinPasswordForm"
+        *ngIf="display"
+        (ngSubmit)="submit()"
+      >
+        <div class="mb-3">
+          <span
+            ><strong>{{ this.email }}</strong></span
+          >
+          <a class="a-link ms-2" (click)="change()">Change</a>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <a class="a-span-last" href="forget-password"
+            >Forget your password?</a
+          >
+          <div class="input-group">
+            <input
+              class="form-control"
+              id="password"
+              formControlName="password"
+              [type]="this.validator.passwordFieldType ? 'text' : 'password'"
+              minlength="6"
+              (mousedown)="cleanErrorMessage()"
+            />
+            <span
+              class="input-group-text"
+              (click)="this.validator.togglePasswordFieldType()"
+            >
+              <i
+                class="fa"
+                [ngClass]="{
+                  'fa-eye-slash': this.validator.passwordFieldType,
+                  'fa-eye': !this.validator.passwordFieldType
+                }"
+              ></i>
+            </span>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary mb-4"
+          type="submit"
+          [disabled]="!signinPasswordForm.valid"
+        >
+          Sign In
+        </button>
+      </form>
+    </fieldset>
+
+    <div *ngIf="!display">
+      <hr />
+      <p>New Here? <a href="register">Create new Account</a></p>
+    </div>
+  </form>
+</app-container>

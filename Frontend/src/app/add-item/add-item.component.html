@@ -1,0 +1,280 @@
+<div class="fluid-container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-6 col-md-8 col-sm-11">
+      <div class="card">
+        <div class="row">
+          <form id="msform">
+            <!-- progressbar -->
+            <ul id="progressbar" class="text-center">
+              <li
+                id="basic-information"
+                [ngClass]="step >= 1 ? 'active ' : 'inactive'"
+              >
+                <strong> Basic Information </strong>
+              </li>
+              <li id="description" [ngClass]="step >= 2 ? 'active ' : 'inactive'">
+                <strong> Description </strong>
+              </li>
+              <li
+                id="images"
+                [ngClass]="step >= 3 ? 'active ' : 'inactive'"
+              >
+                <strong> Images </strong>
+              </li>
+            </ul>
+            <div class="seperator mb-4"></div>
+            <fieldset *ngIf="step == 1">
+              <form
+                class="form-card"
+                [formGroup]="basicInfoForm"
+                (ngSubmit)="next()"
+              >
+                <div class="row mb-4">
+                  <div class="col-3">
+                    <label for="title" class="form-label"> Title </label>
+                  </div>
+                  <div class="col-9">
+                    <input
+                      type="text"
+                      id="title"
+                      formControlName="title"
+                      class="form-control"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-3">
+                    <label for="price" class="form-label"> Price </label>
+                  </div>
+                  <div class="col-9">
+                    <input
+                      type="number"
+                      id="price"
+                      formControlName="price"
+                      class="form-control"
+                      min="0"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-3">
+                    <label for="in-stock" class="form-label"> In Stock </label>
+                  </div>
+                  <div class="col-9">
+                    <input
+                      type="number"
+                      id="in-stock"
+                      formControlName="inStock"
+                      class="form-control"
+                      min="1"
+                    />
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-3">
+                    <label for="category" class="form-label"> Category </label>
+                  </div>
+                  <div class="col-9">
+                    <select
+                      class="form-select py-0"
+                      id="category"
+                      formControlName="category"
+                    >
+                      <option value="">Choose a Category ...</option>
+                      <option value="Mobiles & Tablets" selected>
+                        Mobiles & Tablets
+                      </option>
+                      <option value="Computers">Computers</option>
+                      <option value="Electronics">Electronics</option>
+                      <option value="Fashion">Fashion</option>
+                      <option value="Health & Beauty">Health & Beauty</option>
+                      <option value="Supermarket">Supermarket</option>
+                      <option value="Kitchen">Kitchen</option>
+                      <option value="Toys & Games">Toys & Games</option>
+                      <option value="Sports & Fitness">Sports & Fitness</option>
+                      <option value="Books">Books</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="align-center">
+                  <button
+                    class="btn btn-primary"
+                    [disabled]="!basicInfoForm.valid"
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </form>
+            </fieldset>
+            <!-- Description -->
+            <fieldset *ngIf="step == 2">
+              <form
+                class="form-card"
+                [formGroup]="descriptionForm"
+                (ngSubmit)="next()"
+              >
+                <div class="row mb-4">
+                  <div class="col-3">
+                    <label for="description" class="form-label">
+                      Description
+                    </label>
+                  </div>
+                  <div class="col-9">
+                    <textarea
+                      class="form-control"
+                      id="description"
+                      formControlName="description"
+                      rows="4"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-3">
+                    <label for="key-feature" class="form-label">
+                      Key Feature
+                    </label>
+                  </div>
+                  <div class="col-9">
+                    <div formArrayName="keyFeatures">
+                      <div
+                        *ngFor="
+                          let keyFeature of inputsKeyFeatures;
+                          let i = index
+                        "
+                      >
+                        <input
+                          type="text"
+                          id="key-feature"
+                          class="form-control mb-1"
+                          [formControlName]="i"
+                          placeholder="Key Feature #{{ i + 1 }}"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-9">
+                      <a class="a-link me-4" (click)="addInput()"> Add More </a>
+                      <a class="a-link" (click)="removeLastAddedInput()">
+                        Remove Last Added
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <div class="align-center">
+                  <button
+                    class="btn btn-primary"
+                    [disabled]="!descriptionForm.valid"
+                  >
+                    Save & Continue
+                  </button>
+                </div>
+              </form>
+            </fieldset>
+            <!-- Add Images Form -->
+            <fieldset *ngIf="step == 3">
+              <form
+                class="form-card"
+                [formGroup]="imagesForm"
+                (ngSubmit)="endOfStory()"
+              >
+                <div class="row mb-4">
+                  <div class="col-lg-4 mb-2">
+                    <div class="dropzone">
+                      <img [src]="inputImages[0].value" class="upload-icon" />
+                      <input
+                        type="file"
+                        class="upload-input"
+                        accept="image/*"
+                        formControlName="image_0"
+                        (change)="onFileChange_0($event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-2">
+                    <div class="dropzone">
+                      <img [src]="inputImages[1].value" class="upload-icon" />
+                      <input
+                        type="file"
+                        class="upload-input"
+                        accept="image/*"
+                        formControlName="image_1"
+                        (change)="onFileChange_1($event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-2">
+                    <div class="dropzone">
+                      <img [src]="inputImages[2].value" class="upload-icon" />
+                      <input
+                        type="file"
+                        class="upload-input"
+                        accept="image/*"
+                        formControlName="image_2"
+                        (change)="onFileChange_2($event)"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row mb-4">
+                  <div class="col-lg-4 mb-2">
+                    <div class="dropzone">
+                      <img [src]="inputImages[3].value" class="upload-icon" />
+                      <input
+                        type="file"
+                        class="upload-input"
+                        accept="image/*"
+                        formControlName="image_3"
+                        (change)="onFileChange_3($event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-2">
+                    <div class="dropzone">
+                      <img [src]="inputImages[4].value" class="upload-icon" />
+                      <input
+                        type="file"
+                        class="upload-input"
+                        accept="image/*"
+                        formControlName="image_4"
+                        (change)="onFileChange_4($event)"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-lg-4 mb-2">
+                    <div class="dropzone">
+                      <img [src]="inputImages[5].value" class="upload-icon" />
+                      <input
+                        type="file"
+                        class="upload-input"
+                        accept="image/*"
+                        formControlName="image_5"
+                        (change)="onFileChange_5($event)"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <!-- Submit Button -->
+                <div class="align-center">
+                  <button
+                    class="btn btn-primary"
+                    [disabled]="!imagesForm.valid"
+                  >
+                    Add Product
+                  </button>
+                </div>
+              </form>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

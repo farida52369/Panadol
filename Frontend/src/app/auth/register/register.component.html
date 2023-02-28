@@ -1,0 +1,150 @@
+<app-container>
+  <div id="msform">
+    <div *ngIf="!registeredAlready">
+      <form [formGroup]="signupForm" (ngSubmit)="submit()">
+        <h2 class="paragraph">Create Account</h2>
+        <div class="error-message" *ngIf="errorMessage">
+          <span>
+            <i class="fa fa-exclamation-triangle note"></i> &nbsp;
+            <span [innerHTML]="errorMessage"></span>
+          </span>
+        </div>
+        <div class="mb-3">
+          <label for="username" class="form-label"> Username </label>
+          <input
+            formControlName="username"
+            class="form-control"
+            id="username"
+            type="text"
+            minlength="3"
+            (mousedown)="cleanErrorMessage()"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            class="form-control"
+            placeholder="example@mail.com"
+            (mousedown)="cleanErrorMessage()"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="phonenumber" class="form-label">Phone Number</label>
+          <input
+            formControlName="phonenumber"
+            class="form-control"
+            id="phonenumber"
+            type="text"
+            minlength="3"
+            (mousedown)="cleanErrorMessage()"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <div class="input-group">
+            <input
+              formControlName="password"
+              class="form-control"
+              id="password"
+              [type]="this.validator.passwordFieldType ? 'text' : 'password'"
+              placeholder="At least 6 chars with upper & lower"
+              minlength="6"
+              (mousedown)="cleanErrorMessage()"
+            />
+            <span
+              class="input-group-text"
+              (click)="this.validator.togglePasswordFieldType()"
+            >
+              <i
+                class="fa"
+                [ngClass]="{
+                  'fa-eye-slash': this.validator.passwordFieldType,
+                  'fa-eye': !this.validator.passwordFieldType
+                }"
+              ></i>
+            </span>
+          </div>
+          <small id="passwordHelp" class="form-text text-muted">
+            <i class="fa fa-exclamation-circle note"></i> At least 6 characters
+            with upper & lower.
+          </small>
+        </div>
+        <div class="mb-3">
+          <label for="confirmPass" class="form-label">Confirm Password</label>
+          <div class="input-group">
+            <input
+              formControlName="confirmPassword"
+              class="form-control"
+              id="confirmPass"
+              [type]="this.validator.conPasswordFieldType ? 'text' : 'password'"
+              (mousedown)="cleanErrorMessage()"
+            />
+            <span
+              class="input-group-text"
+              (click)="this.validator.toggleConPasswordFieldType()"
+            >
+              <i
+                class="fa"
+                [ngClass]="{
+                  'fa-eye-slash': this.validator.conPasswordFieldType,
+                  'fa-eye': !this.validator.conPasswordFieldType
+                }"
+              ></i>
+            </span>
+          </div>
+          <small
+            *ngIf="
+              signupForm.getError('misMatch') &&
+              this.signupForm.get('confirmPassword')?.touched
+            "
+            class="form-text text-muted"
+            ><i
+              class="fa fa-exclamation-circle"
+              style="color: rgb(115, 3, 175)"
+            ></i>
+            Passwords do not match
+          </small>
+        </div>
+        <div class="mb-3 form-check">
+          <input
+            type="checkbox"
+            id="verify-email"
+            formControlName="acceptTerms"
+            class="form-check-input"
+          />
+          <label for="verify-email" class="form-check-label">
+            We will send you an e-mail to verify your email
+          </label>
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!signupForm.valid"
+        >
+          Continue
+        </button>
+        <hr />
+        <p>Already have an account? <a href="login"> Sign in</a></p>
+      </form>
+    </div>
+
+    <div *ngIf="registeredAlready">
+      <h2 class="paragraph">Verify Email Address</h2>
+      <hr />
+      <p>
+        To verify your email, we've sent an email with verification token link
+        to <strong>{{ email }}</strong>
+      </p>
+
+      <div class="actions-verify-email">
+        <a class="a-link me-3" (click)="resendVerificationMail()">
+          Resend Verification Mail
+        </a>
+        <a href="login">Sign in</a>
+      </div>
+    </div>
+  </div>
+</app-container>

@@ -1,0 +1,289 @@
+<nav class="navbar">
+  <div class="container">
+    <div class="nav-bar-logo">Panadol Seller Center</div>
+  </div>
+</nav>
+<!-- MultiStep Form -->
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center">
+      <div class="card mt-5">
+        <div class="row">
+          <div class="col-md-12 mx-0">
+            <form id="msform">
+              <!-- progressbar -->
+              <ul id="progressbar">
+                <li
+                  id="business-information"
+                  [ngClass]="step >= 1 ? 'active ' : 'inactive'"
+                >
+                  <strong> Business Information</strong>
+                </li>
+                <li id="payment" [ngClass]="step >= 2 ? 'active ' : 'inactive'">
+                  <strong> Payment Method</strong>
+                </li>
+                <li
+                  id="verification-identity"
+                  [ngClass]="step >= 3 ? 'active ' : 'inactive'"
+                >
+                  <strong> Identity Verification</strong>
+                </li>
+              </ul>
+              <div class="seperator"></div>
+              <!-- fieldsets -->
+              <!-- Business Info Card -->
+              <fieldset *ngIf="step == 1">
+                <form [formGroup]="businessInfo" (ngSubmit)="next()">
+                  <h2 class="fs-title">Business Information</h2>
+                  <div class="form-card">
+                    <div>
+                      <h5 class="paragraph">Registered Business Address</h5>
+                      <div class="row mb-4">
+                        <div class="col-lg-6 col-sm-12">
+                          <input
+                            type="text"
+                            formControlName="country"
+                            autofocus
+                            placeholder="Enter Country"
+                            class="form-control"
+                          />
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                          <input
+                            type="text"
+                            formControlName="governorate"
+                            placeholder="Enter Governorate"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-4">
+                        <div class="col-lg-6 col-sm-12">
+                          <input
+                            type="text"
+                            formControlName="city"
+                            placeholder="Enter City"
+                            class="form-control"
+                          />
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                          <input
+                            type="text"
+                            formControlName="area"
+                            placeholder="Enter Area"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+                      <div class="row mb-4">
+                        <div class="col-lg-6 col-sm-12">
+                          <input
+                            type="text"
+                            formControlName="street"
+                            placeholder="Enter Street"
+                            class="form-control"
+                          />
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                          <input
+                            type="text"
+                            formControlName="apartment"
+                            placeholder="Enter Apartment/building/other"
+                            class="form-control"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <h5 class="paragraph">
+                        Choose your unique business display name
+                      </h5>
+                      <input
+                        type="text"
+                        formControlName="uniqueBusinessName"
+                        placeholder="Enter a name for your store .."
+                        class="form-control"
+                      />
+                    </div>
+                  </div>
+                  <button
+                    class="btn btn-primary"
+                    [disabled]="!businessInfo.valid"
+                  >
+                    Save & Continue
+                  </button>
+                </form>
+              </fieldset>
+              <!-- End of business information -->
+
+              <fieldset *ngIf="step == 2">
+                <form [formGroup]="paymentMethod">
+                  <h2 class="fs-title">Set up your payment methods</h2>
+                  <div class="form-card">
+                    <div class="row mb-4">
+                      <div class="col-lg-6 col-sm-12">
+                        <label class="form-label" for="card-number"
+                          >Card Number</label
+                        >
+                        <input
+                          type="text"
+                          placeholder="xxxxxxxxxxxxxxxx"
+                          formControlName="cardNumber"
+                          autofocus
+                          id="card-number"
+                          class="form-control"
+                        />
+                      </div>
+                      <div class="col-lg-4 col-sm-12">
+                        <label class="form-label" for="expires-on"
+                          >Expires on:</label
+                        >
+                        <div style="display: flex">
+                          <input
+                            type="number"
+                            formControlName="expiryMonth"
+                            id="month"
+                            min="1"
+                            max="12"
+                          />
+                          <input
+                            type="number"
+                            formControlName="expiryYear"
+                            id="year"
+                            [min]="expiryYear"
+                            max="9999"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-4">
+                      <div class="col-12">
+                        <label class="form-label" for="card-number"
+                          >Card Holder's Name</label
+                        >
+                        <input
+                          id="card-number"
+                          type="text"
+                          formControlName="cardHolderName"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="align-center">
+                      <button
+                        class="btn btn-primary"
+                        [disabled]="!paymentMethod.valid"
+                        (click)="savePaymentMethod()"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                <button
+                  [disabled]="noNextUntilProvidingPayment"
+                  (click)="next()"
+                  class="btn btn-primary"
+                >
+                  Save & Continue
+                </button>
+              </fieldset>
+              <!-- End of Payment method -->
+              <fieldset *ngIf="step == 3">
+                <form
+                  [formGroup]="identityVerification"
+                  (ngSubmit)="endOfStory()"
+                >
+                  <h2 class="fs-title text-center">Identity Verification</h2>
+                  <div class="form-card">
+                    <h5 class="mb-2">
+                      Resident Identity Information and Expiration
+                    </h5>
+                    <div class="row mb-4">
+                      <input
+                        type="text"
+                        formControlName="nationalID"
+                        autofocus
+                        placeholder="National or Residence ID"
+                        id="national-id"
+                        class="form-control"
+                      />
+                    </div>
+                    <div class="mb-4">
+                      <label
+                        class="form-label"
+                        for="expiration-date-of-national-id"
+                      >
+                        Expiration Date:
+                      </label>
+                      <div class="col-5">
+                        <input
+                          type="date"
+                          formControlName="expirationDateOfNationalID"
+                          id="expiration-date-of-national-id"
+                          [min]="nationalIDExpirationDate"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <h5 class="mb-2">Full Name and Date of Birth</h5>
+                    <div class="row mb-4">
+                      <div class="col-lg-4 col-sm-12">
+                        <input
+                          type="text"
+                          formControlName="firstName"
+                          id="first-name"
+                          placeholder="First Name"
+                          class="form-control"
+                        />
+                      </div>
+                      <div class="col-lg-4 col-sm-12">
+                        <input
+                          type="text"
+                          formControlName="middleName"
+                          id="middle-name"
+                          placeholder="Middle Name"
+                          class="form-control"
+                        />
+                      </div>
+                      <div class="col-lg-4 col-sm-12">
+                        <input
+                          type="text"
+                          formControlName="lastName"
+                          id="last-name"
+                          placeholder="Last Name"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                    <div class="mb-4">
+                      <label class="form-label" for="date-of-birth"
+                        >Date Of Birth:</label
+                      >
+                      <div class="col-5">
+                        <input
+                          type="date"
+                          formControlName="dateOfBirth"
+                          id="date-of-birth"
+                          [max]="legalBirthToSell"
+                          class="form-control"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    [disabled]="!identityVerification.valid"
+                    class="btn btn-primary"
+                  >
+                    Submit
+                  </button>
+                </form>
+              </fieldset>
+              <!-- End of identity verification -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

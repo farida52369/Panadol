@@ -1,0 +1,83 @@
+.card {
+  z-index: 0;
+  border: none;
+  position: relative;
+}
+
+.hwllo {
+  padding: 15px;
+}
+
+input,
+select {
+  height: 34px;
+}
+
+textarea,
+input,
+select {
+  border: none;
+  border: 1px solid #ccc;
+  border-radius: 0px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: montserrat;
+  color: #2c3e50;
+  font-size: 19px;
+  letter-spacing: 1px;
+}
+
+label {
+  font-size: 19px;
+  letter-spacing: 1px;
+}
+
+.btn-primary {
+  width: auto;
+  font-weight: 550;
+  font-size: 18.5px;
+}
+
+/* Image for uploading */
+.dropzone {
+  position: relative;
+  height: 200px;
+  border: 1px dashed #999;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-around;
+  flex-flow: wrap;
+}
+
+.upload-icon {
+  max-width: 100%;
+  height: auto;
+  max-height: 100%;
+  cursor: pointer;
+}
+
+.upload-input {
+  position: absolute;
+  height: 100% !important;
+  opacity: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+/* Icons in the ProgressBar */
+#progressbar #basic-information:before {
+  font-family: FontAwesome;
+  content: "\f288";
+}
+
+#progressbar #description:before {
+  font-family: FontAwesome;
+  content: "\f15c";
+}
+
+#progressbar #images:before {
+  font-family: FontAwesome;
+  content: "\f03e";
+}
