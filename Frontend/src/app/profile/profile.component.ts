@@ -1,91 +1,184 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
-import { ProfileService } from './profile.service';
-import { ProfileInfoResponse } from '../dto/data';
-import { AuthService } from '../auth/service/auth.service';
+import { Router } from "@angular/router";
+import { Component, OnInit } from "@angular/core";
+import { ProfileService } from "./profile.service";
+import { ValidatorsService } from "../auth/service/validators.service";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Messages } from "../common/messages";
+import { ProfileResponsePayload } from "./profile-request.payload";
+import { Alert } from "../common/alert";
 
 @Component({
-  selector: 'app-profile',
-  templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.css'],
+  selector: "app-profile",
+  templateUrl: "./profile.component.html",
+  styleUrls: ["./profile.component.css"],
 })
 export class ProfileComponent implements OnInit {
+  isEditableEmail: boolean = false;
+  emailValue!: string;
+  isEditableUsername: boolean = false;
+  usernameValue!: string;
+  isEditablePassword: boolean = false;
+  isEditablePhoneNumber: boolean = false;
+  phoneNumberValue!: string;
+
+  changePasswordForm!: FormGroup;
+  errorMessage: string = "";
+  profileResponsePayload!: ProfileResponsePayload;
+
   constructor(
     private router: Router,
-    private profileSer: ProfileService,
-    private authService: AuthService
-  ) {}
-
-  data: ProfileInfoResponse = {
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    gender: '',
-  };
-
-  edit: any;
-  newFname: any;
-  newLname: any;
-  newTel: any;
-  newPass:any;
-
-  ngOnInit(): void {
-    this.getUserPersonalInfo();
+    private profileService: ProfileService,
+    protected validator: ValidatorsService
+  ) {
+    this.profileResponsePayload = {
+      email: "",
+      userName: "",
+      phoneNumber: "",
+    };
   }
 
-  getUserPersonalInfo(): void {
-    this.profileSer.userProfileInfo(this.authService.getUserEmail()).subscribe(
-      (res) => {
-        this.data = res;
-        console.log('I GRABBED USER INFO FROM THE SERVER :)');
-        this.router.navigateByUrl('user/profile');
+  ngOnInit(): void {
+    this.profileService.getProfileRequest().subscribe({
+      next: (data) => {
+        this.profileResponsePayload = data;
       },
-      (error: HttpErrorResponse) =>
-        console.log('7AZ AWFR EL MARA EL GAYA!!\nError: ' + error.message)
+      error: (error) => {
+        console.error(error);
+        Alert.errorAlert(Messages.ERROR_IN_PROFILE);
+      },
+    });
+  }
+
+  // Email
+  editEmail() {
+    this.isEditableEmail = true;
+    // set other variables
+    this.isEditablePhoneNumber = false;
+    this.isEditableUsername = false;
+    this.isEditablePassword = false;
+  }
+
+  saveEmail() {
+    this.isEditableEmail = false;
+  }
+
+  // User Name
+  editUsername() {
+    this.isEditableUsername = true;
+    // set other variables
+    this.isEditablePhoneNumber = false;
+    this.isEditableEmail = false;
+    this.isEditablePassword = false;
+  }
+
+  saveUsername() {
+    this.isEditableUsername = false;
+    console.log(`New User Name: ${this.usernameValue}`);
+    this.profileService.changeUsername(this.usernameValue).subscribe({
+      next: (data) => {
+        if (data) {
+          console.info("User Name changed successfully");
+        }
+      },
+      error: (error) => {
+        console.error(`Error when changing User Name ${error}`);
+      },
+    });
+  }
+
+  // Phone Number
+  editPhoneNumber() {
+    this.isEditablePhoneNumber = true;
+    // set other variables
+    this.isEditableUsername = false;
+    this.isEditableEmail = false;
+    this.isEditablePassword = false;
+  }
+
+  savePhoneNumber() {
+    this.isEditablePhoneNumber = false;
+    console.log(`New Phone Number: ${this.phoneNumberValue}`);
+    this.profileService.changePhoneNumber(this.phoneNumberValue).subscribe({
+      next: (data) => {
+        if (data) {
+          console.info("Phone Number changed successfully");
+        }
+      },
+      error: (error) => {
+        console.error(`Error when changing Phone Number ${error}`);
+      },
+    });
+  }
+
+  // Password
+  editPassword() {
+    this.isEditablePassword = true;
+    // set other variables
+    this.isEditablePhoneNumber = false;
+    this.isEditableEmail = false;
+    this.isEditableUsername = false;
+
+    this.initForm();
+  }
+
+  initForm() {
+    this.changePasswordForm = new FormGroup(
+      {
+        currentPassword: new FormControl("", [
+          Validators.required,
+          Validators.pattern(Messages.PASSWORD_PATTERN),
+        ]),
+        newPassword: new FormControl("", [
+          Validators.required,
+          Validators.pattern(Messages.PASSWORD_PATTERN),
+        ]),
+        confirmNewPassword: new FormControl("", [Validators.required]),
+      },
+      {
+        validators: this.validator.mustMatch(
+          "newPassword",
+          "confirmNewPassword"
+        ),
+      }
     );
   }
 
- 
-  afterClick() {
-    this.edit = <HTMLInputElement>document.getElementById('box-edit');
-    if (this.edit.style.display === 'block') {
-      this.edit.style.display = 'none';
-    } else {
-      this.edit.style.display = 'block';
-    }
+  savePassword() {
+    const currentPassword =
+      this.changePasswordForm.get("currentPassword")?.value;
+    const newPassword = this.changePasswordForm.get("newPassword")?.value;
+    this.profileService
+      .changePassword({
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      })
+      .subscribe({
+        next: (data) => {
+          if (data) {
+            console.info("Password changed successfully");
+            this.isEditablePassword = false;
+          } else {
+            this.errorMessage = Messages.PASSWORD_ERROR;
+          }
+        },
+        error: (error) => {
+          this.errorMessage = Messages.PASSWORD_ERROR;
+          console.error(`Error when changing Phone Number ${error}`);
+        },
+      });
   }
 
-  editProfile() {
-    this.afterClick();
-    this.newFname = (<HTMLInputElement>(
-      document.getElementById('new-fname')
-    )).value;
-    this.newLname = (<HTMLInputElement>(
-      document.getElementById('new-lname'))).value;
-    this.newTel = (<HTMLInputElement>document.getElementById('new-tel')).value;
-    this.newPass=(<HTMLInputElement>document.getElementById('new-pass')).value;
-    if (
-      this.newFname === '' ||
-      this.newLname === '' ||
-      !!(<HTMLInputElement>document.getElementById('new-tel')).type.match(
-        '[0-9]{11}'
-      )
-    ) {
-      return;
-    }
-
-    console.log(this.newFname);
-    console.log(this.newLname);
-    console.log(this.newTel);
-    console.log(this.newPass);
+  cleanErrorMessage() {
+    this.errorMessage = "";
   }
 
-  backToHome() {
-    this.router.navigate(['/home'], {
-      queryParams: { inHome: 'true' },
+  returnHome() {
+    this.router.navigate(["/home"]);
+  }
+
+  uneditPassword() {
+    this.router.navigate(["/user/profile"]).then(() => {
+      location.reload();
     });
   }
 }

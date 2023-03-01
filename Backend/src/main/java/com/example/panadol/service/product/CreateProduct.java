@@ -11,7 +11,7 @@ import com.example.panadol.repository.product.ProductBasicInfoRepo;
 import com.example.panadol.repository.product.ProductDescriptionRepo;
 import com.example.panadol.repository.product.ProductImageRepo;
 import com.example.panadol.repository.product.ProductRepository;
-import com.example.panadol.service.auth.SignInService;
+import com.example.panadol.service.auth.AuthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class CreateProduct {
     private final ProductBasicInfoRepo basicInfoRepo;
     private final ProductDescriptionRepo descriptionRepo;
     private final ProductImageRepo imageRepo;
-    private final SignInService signInService;
+    private final AuthService authService;
     private final ProductBasicInfoMapper basicInfoMapper;
 
     public void saveNewProduct(
@@ -47,7 +47,7 @@ public class CreateProduct {
         descriptionRepo.save(description);
         product.setDescription(description);
         // Owner
-        product.setOwnerId(signInService.getCurrentUser());
+        product.setOwnerId(authService.getCurrentUser());
         // Created Time
         product.setCreatedDate(new Date(System.currentTimeMillis()));
         productRepository.save(product);

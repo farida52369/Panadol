@@ -33,7 +33,7 @@ public class SellerService {
     private final PaymentMethodRepository paymentMethodRepository;
     private final SellerRepository sellerRepository;
     // Get Current User
-    private final SignInService authService;
+    private final AuthService authService;
     // Mappers
     private final BusinessInfoMapper businessInfoMapper;
     private final PaymentMethodMapper paymentMethodMapper;

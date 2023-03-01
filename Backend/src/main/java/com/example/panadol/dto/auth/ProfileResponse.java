@@ -1,4 +1,4 @@
-package com.example.panadol.dto;
+package com.example.panadol.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProfileInfoResponse {
-    private String firstName;
-    private String lastName;
+public class ProfileResponse {
     private String email;
     private String phoneNumber;
-    private String dateOfBirth;
-    private String gender;
+    private String userName;
 }

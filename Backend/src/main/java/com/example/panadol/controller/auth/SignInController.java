@@ -41,14 +41,4 @@ public class SignInController {
         log.info("Login User {}", loginRequest.getEmail());
         return ResponseEntity.ok(signInService.loginToPanadol(loginRequest));
     }
-
-    @PostMapping(
-            value = "/refresh/token",
-            consumes = {"application/json"}
-    )
-    public ResponseEntity<AuthenticationResponse> refreshTokens(
-            @Valid @RequestBody RefreshTokenRequest refreshTokenRequest
-    ) {
-        return ResponseEntity.ok(signInService.refreshToken(refreshTokenRequest));
-    }
 }

@@ -28,7 +28,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("BosDe API")
                 .version("2.0")
-                .description("API for BosDe Online Shopping Application")
+                .description("API for Panadol Online Shopping Application")
                 .contact(new Contact("Fareeda Ragab", "#", "fareeeeda1@email.com"))
                 .license("Apache License Version 2.0")
                 .build();

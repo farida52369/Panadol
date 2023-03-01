@@ -101,10 +101,8 @@
               this.signupForm.get('confirmPassword')?.touched
             "
             class="form-text text-muted"
-            ><i
-              class="fa fa-exclamation-circle"
-              style="color: rgb(115, 3, 175)"
-            ></i>
+          >
+            <i class="fa fa-exclamation-circle note"></i>
             Passwords do not match
           </small>
         </div>
@@ -119,11 +117,7 @@
             We will send you an e-mail to verify your email
           </label>
         </div>
-        <button
-          class="btn btn-primary"
-          type="submit"
-          [disabled]="!signupForm.valid"
-        >
+        <button class="btn btn-primary" [disabled]="!signupForm.valid">
           Continue
         </button>
         <hr />

@@ -48,11 +48,11 @@ public class VerTokenService {
         final AppUser user = userRepository.findByEmail(email).orElseThrow(() -> {
             throw new UsernameNotFoundException("User doesn't exist: " + email);
         });
-       generateVerificationToken(user, FORGET_PASSWORD);
+        generateVerificationToken(user, FORGET_PASSWORD);
     }
 
-    public Boolean validatePasswordResetToken(final String token, final VerificationType type) {
-        return validateVerificationToken(token, type) == TOKEN_VALID;
+    public Boolean validatePasswordResetToken(final String token) {
+        return validateVerificationToken(token) == TOKEN_VALID;
     }
 
     public void resetPassword(PasswordResetRequest passwordResetRequest) {
@@ -65,18 +65,8 @@ public class VerTokenService {
         userRepository.save(user);
     }
 
-    public GenericResponse validateVerificationToken(final String aboutType, final VerificationType type) {
-        final Optional<VerificationToken> verificationToken;
-        if (type == FORGET_PASSWORD) {
-            verificationToken = verificationTokenRepository.findByToken(aboutType);
-        } else {
-            final AppUser user = userRepository.findByEmail(aboutType).orElseThrow(
-                    () -> {
-                        throw new PanadolException("User Not In System.");
-                    }
-            );
-            verificationToken = verificationTokenRepository.findByUser(user);
-        }
+    public GenericResponse validateVerificationToken(final String aboutType) {
+        final Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(aboutType);
 
         if (!verificationToken.isPresent()) {
             return TOKEN_INVALID;

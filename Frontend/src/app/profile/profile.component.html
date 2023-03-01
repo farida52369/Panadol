@@ -1,73 +1,240 @@
-<body>
-  <div class="main">
+<div class="fluid-container">
+  <div class="row justify-content-center">
+    <div
+      *ngIf="!isEditablePassword"
+      class="col-12 col-lg-4 col-md-7 col-sm-10 mt-4"
+    >
+      <div class="row">
+        <div class="form-card">
+          <h2>User Profile</h2>
+          <hr />
+          <div class="mb-3">
+            <label for="email" class="form-label"> Email: </label>
+            <div class="row">
+              <div class="col-6">
+                <input
+                  type="email"
+                  class="form-control"
+                  id="email"
+                  [(ngModel)]="emailValue"
+                  [value]="profileResponsePayload.email"
+                  [readOnly]="!isEditableEmail"
+                />
+              </div>
+              <div *ngIf="!isEditableEmail" class="offset-4 col-2">
+                <input type="button" value="Edit" (click)="editEmail()" />
+              </div>
+              <div *ngIf="isEditableEmail" class="offset-4 col-2">
+                <input type="submit" value="Save" (click)="saveEmail()" />
+              </div>
+            </div>
+          </div>
 
-    <img src="/assets/user_icon.jpg">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-sm-10">
-          <button class="style-button" (click)="afterClick()" id="edit">Edit</button>
-          <form id="box-edit" ngNativeValidate>
-            <input type="text" placeholder="Enter New First Name" id="new-fname" value={{data.firstName}} required />
-            <br>
-            <input type="text" placeholder="Enter New Last Name" id="new-lname" value={{data.lastName}} required />
-            <br>
-            <input type="tel" placeholder="Enter New Phone Number" value={{data.phoneNumber}} pattern="[0-9]{11}"
-              id="new-tel" required />
-            <br>
-            <input type="password" placeholder="Enter New password" value="**********" id="new-pass" minlength="8"
-              required />
-            <button class="style-button" (click)="editProfile()">Ok</button>
-          </form>
-        </div>
-        <div class="col-sm-10">
-          <button class="style-button" (click)="backToHome()">Back To Home</button>
-        </div>
-      </div>
-      <br>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Full Name</h6>
-        </div>
-        <div class="col-sm-9 text-secondary">
-          {{ data.firstName + " " + data.lastName }}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Email</h6>
-        </div>
-        <div class="col-sm-9 text-secondary">
-          {{ data.email }}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Phone Number</h6>
-        </div>
-        <div class="col-sm-9 text-secondary">
-          {{ data.phoneNumber }}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Date Of Birth</h6>
-        </div>
-        <div class="col-sm-9 text-secondary">
-          {{ data.dateOfBirth }}
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-sm-3">
-          <h6 class="mb-0">Gender</h6>
-        </div>
-        <div class="col-sm-9 text-secondary">
-          {{ data.gender }}
+          <hr />
+          <div class="mb-3">
+            <label for="username" class="form-label">Username:</label>
+            <div class="row">
+              <div class="col-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  [(ngModel)]="usernameValue"
+                  [value]="profileResponsePayload.userName"
+                  [readOnly]="!isEditableUsername"
+                />
+              </div>
+              <div *ngIf="!isEditableUsername" class="offset-4 col-2">
+                <input type="button" value="Edit" (click)="editUsername()" />
+              </div>
+              <div *ngIf="isEditableUsername" class="offset-4 col-2">
+                <input type="submit" value="Save" (click)="saveUsername()" />
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div class="mb-3">
+            <label for="phone-number" class="form-label"> Phone: </label>
+            <div class="row">
+              <div class="col-6">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phone-number"
+                  [(ngModel)]="phoneNumberValue"
+                  [value]="profileResponsePayload.phoneNumber"
+                  [readOnly]="!isEditablePhoneNumber"
+                />
+              </div>
+              <div *ngIf="!isEditablePhoneNumber" class="offset-4 col-2">
+                <input type="button" value="Edit" (click)="editPhoneNumber()" />
+              </div>
+              <div *ngIf="isEditablePhoneNumber" class="offset-4 col-2">
+                <input type="submit" value="Save" (click)="savePhoneNumber()" />
+              </div>
+            </div>
+          </div>
+
+          <hr />
+          <div class="mb-3">
+            <label for="password" class="form-label">Password:</label>
+            <div class="row">
+              <div class="col-6">
+                <span>********</span>
+              </div>
+              <div class="offset-4 col-2">
+                <input type="button" value="Edit" (click)="editPassword()" />
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="align-center">
+            <button class="btn btn-primary" (click)="returnHome()">Done</button>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF -->
+    <!-- FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF -->
+    <!-- FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF -->
+    <!-- FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF -->
+    <div
+      *ngIf="isEditablePassword"
+      class="col-12 col-lg-3 col-md-5 col-sm-8 mt-4"
+    >
+      <div class="row">
+        <form
+          class="form-card"
+          [formGroup]="changePasswordForm"
+          (ngSubmit)="savePassword()"
+        >
+          <h2>Change Password</h2>
+          <hr />
+          <div class="error-message" *ngIf="errorMessage">
+            <span>
+              <i class="fa fa-exclamation-triangle note"></i> &nbsp;
+              <span [innerHTML]="errorMessage"></span>
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="current-password" class="form-label">
+              Current Password:
+            </label>
+            <div class="input-group">
+              <input
+                formControlName="currentPassword"
+                class="form-control"
+                id="current-password"
+                [type]="
+                  this.validator.currentPassFieldType ? 'text' : 'password'
+                "
+                minlength="6"
+                (mousedown)="cleanErrorMessage()"
+              />
+              <span
+                class="input-group-text"
+                (click)="this.validator.toggleCurrentPassFieldType()"
+              >
+                <i
+                  class="fa"
+                  [ngClass]="{
+                    'fa-eye-slash': this.validator.currentPassFieldType,
+                    'fa-eye': !this.validator.currentPassFieldType
+                  }"
+                >
+                </i>
+              </span>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="new-password" class="form-label"> New Password: </label>
+            <div class="input-group">
+              <input
+                formControlName="newPassword"
+                class="form-control"
+                id="new-password"
+                [type]="this.validator.passwordFieldType ? 'text' : 'password'"
+                minlength="6"
+                (mousedown)="cleanErrorMessage()"
+              />
+              <span
+                class="input-group-text"
+                (click)="this.validator.togglePasswordFieldType()"
+              >
+                <i
+                  class="fa"
+                  [ngClass]="{
+                    'fa-eye-slash': this.validator.passwordFieldType,
+                    'fa-eye': !this.validator.passwordFieldType
+                  }"
+                >
+                </i>
+              </span>
+            </div>
+            <small class="form-text text-muted">
+              <i class="fa fa-exclamation-circle note"></i> At least 6
+              characters with upper & lower.
+            </small>
+          </div>
+
+          <div class="mb-3">
+            <label for="confirmPass" class="form-label">
+              Confirm New Password:
+            </label>
+            <div class="input-group">
+              <input
+                formControlName="confirmNewPassword"
+                class="form-control"
+                id="confirmPass"
+                [type]="
+                  this.validator.conPasswordFieldType ? 'text' : 'password'
+                "
+                (mousedown)="cleanErrorMessage()"
+              />
+              <span
+                class="input-group-text"
+                (click)="this.validator.toggleConPasswordFieldType()"
+              >
+                <i
+                  class="fa"
+                  [ngClass]="{
+                    'fa-eye-slash': this.validator.conPasswordFieldType,
+                    'fa-eye': !this.validator.conPasswordFieldType
+                  }"
+                ></i>
+              </span>
+            </div>
+            <small
+              *ngIf="
+                changePasswordForm.getError('misMatch') &&
+                this.changePasswordForm.get('confirmPassword')?.touched
+              "
+              class="form-text text-muted"
+            >
+              <i class="fa fa-exclamation-circle note"></i>
+              Passwords do not match
+            </small>
+          </div>
+          <div class="row align-center">
+            <div class="col-3">
+              <button
+                class="btn btn-primary"
+                [disabled]="!changePasswordForm.valid"
+              >
+                Save
+              </button>
+            </div>
+            <div class="col-9">
+              <button class="btn btn-primary" (click)="uneditPassword()">
+                Change Mind
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
-</body>
+</div>

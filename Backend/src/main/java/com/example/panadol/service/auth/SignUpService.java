@@ -53,7 +53,7 @@ public class SignUpService {
     }
 
     public String verifyAccount(final String token) {
-        GenericResponse response = verificationTokenService.validateVerificationToken(token, VerificationType.REGISTER);
+        GenericResponse response = verificationTokenService.validateVerificationToken(token);
         if (response == TOKEN_VALID) {
             fetchAndEnable(verificationTokenService.getByToken(token));
             return "Account activated Successfully!";

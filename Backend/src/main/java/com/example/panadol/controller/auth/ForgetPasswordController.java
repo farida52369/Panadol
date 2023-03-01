@@ -29,7 +29,7 @@ public class ForgetPasswordController {
             value = "/verify-reset-token"
     )
     public ResponseEntity<Boolean> verifyResetToken(@RequestParam String token) {
-        return ResponseEntity.ok(verificationTokenService.validatePasswordResetToken(token, VerificationType.FORGET_PASSWORD));
+        return ResponseEntity.ok(verificationTokenService.validatePasswordResetToken(token));
     }
 
     @GetMapping(

@@ -15,6 +15,7 @@ export class Messages {
     "Error When Registering As a Seller, Try again later!";
   public static readonly CONGRATULATE_SELLER =
     "Congratulations, You're now a Seller.";
+  public static readonly ERROR_IN_PROFILE = "Error When Loading User Profile!";
 
   public static EMAIL_IN_USE(email: string): string {
     return `Email address <strong>${email}</strong> already in use`;

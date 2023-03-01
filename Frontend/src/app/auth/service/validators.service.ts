@@ -4,9 +4,11 @@ import { ValidationErrors, ValidatorFn, AbstractControl } from "@angular/forms";
   providedIn: "root",
 })
 export class ValidatorsService {
+  currentPassFieldType!: boolean;
   passwordFieldType!: boolean;
   conPasswordFieldType!: boolean;
   constructor() {
+    this.currentPassFieldType = false;
     this.passwordFieldType = false;
     this.conPasswordFieldType = false;
   }
@@ -30,6 +32,10 @@ export class ValidatorsService {
         return null;
       }
     };
+  }
+
+  toggleCurrentPassFieldType() {
+    this.currentPassFieldType = !this.currentPassFieldType;
   }
 
   togglePasswordFieldType() {
