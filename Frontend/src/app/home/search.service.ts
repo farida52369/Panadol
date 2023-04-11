@@ -42,17 +42,13 @@ export class SearchService {
     searchBy: string,
     filterByCategory: string,
     filterByPrice: string,
-    filterByReview: string,
-    offset: number,
-    limit: number
+    filterByReview: string
   ): Observable<any> {
     const params = new HttpParams()
       .set("searchBy", searchBy)
       .set("filterByCategory", filterByCategory)
       .set("filterByPrice", filterByPrice)
-      .set("filterByReview", filterByReview)
-      .set("offset", offset)
-      .set("limit", limit);
+      .set("filterByReview", filterByReview);
 
     return this.http.get<void>(`${environment.apiBaseUrl}/api/search`, {
       params,

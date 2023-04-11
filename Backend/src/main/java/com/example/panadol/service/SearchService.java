@@ -24,15 +24,13 @@ public class SearchService {
 
     private final ProductAbstractionMapper abstractionMapper;
     @PersistenceContext
-    private EntityManager entityManager;
+    private final EntityManager entityManager;
 
     public List<ProductAbstractionRequest> getProducts(
             String searchBy,
             final String filterByCategory,
             final String filterByPrice,
-            final String filterByRate,
-            final String offset,
-            final String limit
+            final String filterByRate
     ) {
         List<ProductAbstractionRequest> res = new ArrayList<>();
 
@@ -92,12 +90,9 @@ public class SearchService {
                 criteriaQuery.orderBy(builder.desc(root.get("basicInfo").get("price")));
                 break;
         }
-        // log.info("After Filter By Price");
 
         // Limit By Specific Offset
         TypedQuery<Product> productsQuery = entityManager.createQuery(criteriaQuery);
-        productsQuery.setFirstResult(getNumber(offset));
-        productsQuery.setMaxResults(getNumber(limit));
 
         List<Product> products = productsQuery.getResultList();
         // log.info("Size of List Products: {}", products.size());
@@ -110,6 +105,10 @@ public class SearchService {
         return res;
     }
 
+    /*
+     * The solution for making offset and limit when search & filter service
+    // productsQuery.setFirstResult(getNumber(offset));
+    // productsQuery.setMaxResults(getNumber(limit));
     private int getNumber(final String strNum) {
         int review;
         try {
@@ -119,6 +118,7 @@ public class SearchService {
             return 0;
         }
     }
+     */
 
     private double getRate(String rate) {
         double review;

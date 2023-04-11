@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 
+// ng generate component <component-name> --skipTests=true --inlineStyle=true --inlineTemplate=true
+
 @Component({
   selector: "app-container",
   template: `

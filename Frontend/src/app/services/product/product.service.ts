@@ -10,6 +10,7 @@ import {
 import { environment } from 'src/environments/environment';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Router } from '@angular/router';
+import { ProductRequestPayload } from 'src/app/home/product-request.payload';
 @Injectable({
   providedIn: 'root',
 })
@@ -37,9 +38,9 @@ export class ProductService {
     );
   }
 
-  public getAllProducts(): Observable<ProductSpecificDetails[]> {
-    return this.http.get<ProductSpecificDetails[]>(
-      `${environment.apiBaseUrl}/api/product/all`
+  public getAllProducts(offset: number, limit: number): Observable<ProductRequestPayload[]> {
+    return this.http.get<ProductRequestPayload[]>(
+      `${environment.apiBaseUrl}/api/product/all?offset=${offset}&limit=${limit}`
     );
   }
 

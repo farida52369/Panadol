@@ -7,13 +7,15 @@
 
 /* type of filtering style */
 .header-title {
-  font-weight: bold;
+  font-weight: 550;
+  font-size: 18px;
 }
 
 label,
 input,
 .form-check {
   cursor: pointer;
+  font-size: 14.5px;
 }
 
 /* Link */
@@ -26,13 +28,4 @@ label:hover,
 .form-check:hover,
 .a-link:hover {
   color: #c00000;
-}
-
-/* Icons style for customer review */
-.mat-icon {
-  font-size: 24px;
-}
-
-.mat-icon-star {
-  color: rgb(255, 153, 0);
 }

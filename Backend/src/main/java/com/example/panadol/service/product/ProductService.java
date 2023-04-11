@@ -1,12 +1,17 @@
 package com.example.panadol.service.product;
 
-import com.example.panadol.dto.*;
+import com.example.panadol.dto.ProductAllInfo;
+import com.example.panadol.dto.ProductEdit;
+import com.example.panadol.dto.ProductResponse;
+import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.mapper.product.ProductAbstractionMapper;
 import com.example.panadol.model.product.Product;
 import com.example.panadol.repository.product.ProductRepository;
-import com.example.panadol.repository.auth.UserRepository;
-import com.example.panadol.service.auth.SignInService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -20,23 +25,18 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
-    private final SignInService authService;
-    private final UserRepository userRepository;
+    private final ProductAbstractionMapper abstractionMapper;
 
-    public List<ProductSpecificDetails> getAllProducts() {
-        List<Product> products = productRepository.findAll();
-        List<ProductSpecificDetails> res = new ArrayList<>();
-        for (Product product : products) {
-//            if (product.getInStock() <= 0) continue;
-//            res.add(ProductSpecificDetails.builder().
-//                    productId(product.getProductId()).
-//                    title(product.getTitle()).
-//                    description(product.getDescription()).
-//                    price(product.getPrice()).
-//                    image(product.getImage()).
-//                    inStock(product.getInStock()).
-//                    build());
-        }
+    public List<ProductAbstractionRequest> getAllProducts(final int offset, final int limit) {
+        log.info("Offset: {}, Limit: {}", offset, limit);
+        List<ProductAbstractionRequest> res = new ArrayList<>();
+        Pageable pageable = PageRequest.of(offset, limit);
+        Page<Product> productPage = productRepository.findAll(pageable);
+        productPage.forEach(product -> {
+            res.add(abstractionMapper.map(product));
+            log.info("Product #{}", product.getProductId());
+        });
+        // log.info("Products To Be Sent: {}", res.size());
         return res;
     }
 
@@ -51,7 +51,7 @@ public class ProductService {
 //                category(product.getCategory()).
 //                image(product.getImage()).
 //                createdDate(product.getCreatedDate()).
-                build();
+        build();
     }
 
     public ProductAllInfo productAllInfo(Long productId, String email) {
@@ -67,7 +67,7 @@ public class ProductService {
 //                title(product.getTitle()).
 //                description(product.getDescription()).
 //                category(product.getCategory()).
-                build();
+        build();
     }
 
     public void editProduct(ProductEdit productEdit) {
