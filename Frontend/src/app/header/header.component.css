@@ -1,0 +1,32 @@
+/* Navbar logo brand */
+.brand-logo {
+  padding: 1px;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.brand-logo:hover {
+  box-shadow: 0 0 0 1px white;
+}
+
+/* Search input tag */
+.seacrh-input {
+  width: 70%;
+  margin-right: 5%;
+}
+
+.seacrh-input input {
+  border-radius: 0px;
+  font-family: montserrat;
+  color: #2c3e50;
+  font-size: 19px;
+}
+
+.cutsom-item:hover {
+    box-shadow: 0 0 0 1px white;
+}
+
+.nav-link {
+    color: white;
+    font-size: 20px;
+}

@@ -1,0 +1,38 @@
+.sidebar {
+  height: 100%;
+  border-right: 1px solid #dedede;
+  margin-top: 15px;
+  margin-left: 15px;
+}
+
+/* type of filtering style */
+.header-title {
+  font-weight: bold;
+}
+
+label,
+input,
+.form-check {
+  cursor: pointer;
+}
+
+/* Link */
+.a-link {
+  text-decoration: none;
+  color: black;
+}
+
+label:hover,
+.form-check:hover,
+.a-link:hover {
+  color: #c00000;
+}
+
+/* Icons style for customer review */
+.mat-icon {
+  font-size: 24px;
+}
+
+.mat-icon-star {
+  color: rgb(255, 153, 0);
+}

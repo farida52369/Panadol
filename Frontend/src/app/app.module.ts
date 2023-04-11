@@ -22,6 +22,9 @@ import { TokenInterceptor } from "./auth/token-interceptor";
 import { SweetAlert2Module } from "@sweetalert2/ngx-sweetalert2";
 import { ForgetPasswordComponent } from './auth/forget-password/forget-password.component';
 import { ContainerComponent } from './auth/container/container.component';
+import { HeaderComponent } from './header/header.component';
+import { SideBarComponent } from './side-bar/side-bar.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -36,7 +39,9 @@ import { ContainerComponent } from './auth/container/container.component';
     CheckoutComponent,
     SellerComponent,
     ForgetPasswordComponent,
-    ContainerComponent
+    ContainerComponent,
+    HeaderComponent,
+    SideBarComponent
   ],
   imports: [
     BrowserModule,
@@ -50,6 +55,7 @@ import { ContainerComponent } from './auth/container/container.component';
     NgxPaginationModule,
     NgxWebstorageModule.forRoot(),
     SweetAlert2Module.forRoot(),
+    MatIconModule,
   ],
   providers: [
     {

@@ -23,7 +23,7 @@ export class AddItemComponent {
   // Inputs for Images & Payload
   inputImages: ImagesPayload[] = [];
   // Steps
-  step: number = 3;
+  step: number = 1;
 
   constructor(private productService: ProductService, private router: Router) {
     this.formParams = new FormData();

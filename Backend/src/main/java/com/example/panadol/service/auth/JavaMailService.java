@@ -1,4 +1,4 @@
-package com.example.panadol.service;
+package com.example.panadol.service.auth;
 
 import com.example.panadol.dto.auth.NotificationEmail;
 import com.example.panadol.exception.PanadolException;

@@ -1,0 +1,127 @@
+<div class="sidebar">
+  <div class="categories">
+    <h6 class="header-title">Categories</h6>
+    <span *ngIf="category">
+      <a class="a-link" (click)="resetCategory()">&lt; Clear</a>
+    </span>
+    <div *ngFor="let item of categoriesList; let i = index">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="category{{ i }}"
+          name="categoryFilter"
+          (change)="getCategory()"
+          value="{{ item }}"
+          [(ngModel)]="category"
+        />
+        <label class="form-check-label" for="category{{ i }}">
+          {{ item }}
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <div class="price">
+    <h6 class="header-title">Price</h6>
+    <span *ngIf="price">
+      <a class="a-link" (click)="resetPrice()">&lt; Clear</a>
+    </span>
+    <div *ngFor="let item of priceList">
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="radio"
+          id="{{ item }}"
+          name="priceFilter"
+          value="{{ item }}"
+          [(ngModel)]="price"
+          (change)="getPrice()"
+        />
+        <label class="form-check-label" for="{{ item }}"> {{ item }} </label>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <div class="rate">
+    <h6 class="header-title">Avg. Customer Review</h6>
+    <span *ngIf="review">
+      <a class="a-link" (click)="resetReview()">&lt; Clear</a>
+    </span>
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="four-star"
+        name="rateFilter"
+        value="4"
+        [(ngModel)]="review"
+        (change)="getAccrodingToCustomersReview()"
+      />
+      <label class="form-check-label" for="four-star">
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3, 4]">
+          star
+        </mat-icon>
+        <mat-icon class="mat-icon-star">star_border</mat-icon>
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="three-star"
+        name="rateFilter"
+        value="3"
+        [(ngModel)]="review"
+        (change)="getAccrodingToCustomersReview()"
+      />
+      <label class="form-check-label" for="three-star">
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3]">
+          star
+        </mat-icon>
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2]">
+          star_border
+        </mat-icon>
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="two-star"
+        name="rateFilter"
+        value="2"
+        [(ngModel)]="review"
+        (change)="getAccrodingToCustomersReview()"
+      />
+      <label class="form-check-label" for="two-star">
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2]">star</mat-icon>
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3]">
+          star_border
+        </mat-icon>
+      </label>
+    </div>
+
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="radio"
+        id="one-star"
+        name="rateFilter"
+        value="1"
+        [(ngModel)]="review"
+        (change)="getAccrodingToCustomersReview()"
+      />
+      <label class="form-check-label" for="one-star">
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1]">star</mat-icon>
+        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3, 4]">
+          star_border
+        </mat-icon>
+      </label>
+    </div>
+  </div>
+</div>

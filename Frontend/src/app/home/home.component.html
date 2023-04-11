@@ -1,3 +1,31 @@
+<app-header></app-header>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-2 col-sm-4">
+      <app-side-bar></app-side-bar>
+    </div>
+    <div class="col-lg-10">
+      <div
+        class="product"
+        *ngFor="let item of productsToBeViewed; let indexOfelement = index"
+      >
+        <div (click)="viewProduct(item.productId)">
+          <img
+            src="data:image/jpeg;base64,{{ item.image }}"
+            alt="product image"
+          />
+          <h3>{{ item.productId }}</h3>
+          <h4>{{ item.price }} $</h4>
+        </div>
+        <button class="btn" (click)="addToCart(indexOfelement)">
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
 <body>
   <mat-sidenav-container class="sidebar-container">
     <mat-sidenav #sidenav class="side-bar">
@@ -88,3 +116,4 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </body>
+-->

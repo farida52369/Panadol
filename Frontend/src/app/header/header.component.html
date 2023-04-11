@@ -1,0 +1,93 @@
+<nav class="navbar navbar-expand-lg bg-dark">
+  <div class="container-fluid">
+    <div class="brand-logo">
+      <a href="/home">
+        <img
+          src="/assets/panadol_logo_header.svg"
+          alt="Panadol Logo"
+          width="160"
+          height="65"
+        />
+      </a>
+    </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="input-group seacrh-input">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search"
+          aria-describedby="search"
+          #search
+          (change)="onSearchInput(search.value)"
+        />
+        <span class="input-group-text" id="search">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </span>
+      </div>
+
+      <ul class="row navbar-nav">
+        <div *ngIf="isLoggedIn" class="col-7">
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle a-link cutsom-item"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fa fa-user" aria-hidden="true"></i>
+              <span style="padding-left: 6px">Account</span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" href="/user/profile">Profile </a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="dropdown-item" href="/register/as/seller">
+                  Become A Seller
+                </a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="dropdown-item" href="/user/add-item">
+                  Offer Products
+                </a>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li><a class="dropdown-item a-link">Log Out</a></li>
+            </ul>
+          </li>
+        </div>
+
+        <div *ngIf="isLoggedIn" class="col-5">
+          <li class="nav-item">
+            <a class="nav-link a-link cutsom-item">
+              <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+              <span style="padding-left: 6px">Cart </span>
+            </a>
+          </li>
+        </div>
+
+        <div *ngIf="!isLoggedIn" class="col-12">
+          <li class="nav-item">
+            <a class="nav-link cutsom-item" href="/login">
+              <i class="fa fa-sign-in" aria-hidden="true"></i>
+              Sign In
+            </a>
+          </li>
+        </div>
+      </ul>
+    </div>
+  </div>
+</nav>

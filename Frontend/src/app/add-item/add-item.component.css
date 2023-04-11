@@ -2,10 +2,7 @@
   z-index: 0;
   border: none;
   position: relative;
-}
-
-.hwllo {
-  padding: 15px;
+  margin-top: 30px;
 }
 
 input,

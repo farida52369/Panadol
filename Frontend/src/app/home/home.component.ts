@@ -1,17 +1,25 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ProductService } from "../services/product/product.service";
 import { CartService } from "../cart/cart.service";
-import { SearchService } from "../services/search/search.service";
 import { UserService } from "../services/user/user.service";
 import { ProductAllInfo } from "../dto/data";
-import { SignUpService } from "../auth/service/sign-up.service";
 import { AuthService } from "../auth/service/auth.service";
+import { SearchService } from "./search.service";
+import { ProductRequestPayload } from "./product-request.payload";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
+  // Filtering
+  searchTerm!: string;
+  categoryFilter!: string;
+  priceFilter!: string;
+  reviewFilter!: string;
+  // Products
+  productsToBeViewed: Array<ProductRequestPayload> = [];
+
   details: any;
   productToCart: any;
   @ViewChild("noProductFound") noProductEle: ElementRef | undefined;
@@ -21,10 +29,11 @@ export class HomeComponent implements OnInit {
   page: any = 1;
   ownedProducts: boolean = false;
   purchasedProducts: boolean = false;
+  offset: number = 0;
+  limit: number = 10;
 
   constructor(
     private authService: AuthService,
-    private signUpService: SignUpService,
     private productService: ProductService,
     private searchService: SearchService,
     private cartService: CartService,
@@ -36,6 +45,79 @@ export class HomeComponent implements OnInit {
     // this.showProducts();
     // if (this.loggin) this.isManagerSubscribe();
     this.authService.clearSessionStorage();
+
+    // Init subscribers
+    this.initSubscribers();
+
+    // ADD
+    /*
+    this.productsToBeViewed.push({
+      productId: "1",
+      image: "",
+      title: "HEllo",
+      rate: 4,
+      inStock: 45,
+      price: 1200,
+    });
+    */
+  }
+
+  private initSubscribers() {
+    this.searchService.searchTerm$.subscribe((term) => {
+      this.searchTerm = term;
+      this.getProductsBySearch();
+      console.info(`Hello Search Term: ${term}`);
+    });
+
+    this.searchService.categoryFilter$.subscribe((term) => {
+      this.categoryFilter = term;
+      this.getProductsBySearch();
+      console.info(`Hello Category Filter: ${term}`);
+    });
+
+    this.searchService.priceFilter$.subscribe((term) => {
+      this.priceFilter = term;
+      this.getProductsBySearch();
+      console.info(`Hello Price Filter: ${term}`);
+    });
+
+    this.searchService.reviewFilter$.subscribe((term) => {
+      this.reviewFilter = term;
+      this.getProductsBySearch();
+      console.info(`Hello Review Filter: ${term}`);
+    });
+  }
+
+  private getProductsBySearch() {
+    if (this.allEmpty()) return;
+    this.searchService
+      .getProducts(
+        this.searchTerm || "",
+        this.categoryFilter || "",
+        this.priceFilter || "",
+        this.reviewFilter || "0.0",
+        this.offset,
+        this.limit
+      )
+      .subscribe({
+        next: (data) => {
+          this.productsToBeViewed = data;
+          // this.offset += this.limit;
+          console.info("Get products from server!");
+        },
+        error: (error) => {
+          console.error(`Error: ${error}`);
+        },
+      });
+  }
+
+  allEmpty(): boolean {
+    return (
+      !this.searchTerm &&
+      !this.categoryFilter &&
+      !this.priceFilter &&
+      !this.reviewFilter
+    );
   }
 
   handlePageChange(e: any) {
@@ -81,6 +163,7 @@ export class HomeComponent implements OnInit {
 
   getProductsByWord(word: any) {
     this.setting();
+    /*
     if (word) {
       this.searchBy = `Word: ${word}`;
       this.searchService.getProductsByWord(word).subscribe((res) => {
@@ -94,7 +177,7 @@ export class HomeComponent implements OnInit {
           this.setNoProductToNull();
         }
       });
-    } else this.showProducts();
+    } else this.showProducts();*/
   }
 
   private showProducts() {

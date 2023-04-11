@@ -1,49 +1,132 @@
 package com.example.panadol.service;
 
-import com.example.panadol.dto.ProductSpecificDetails;
+import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.mapper.product.ProductAbstractionMapper;
 import com.example.panadol.model.product.Product;
-import com.example.panadol.repository.product.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SearchService {
 
-    private final ProductRepository productRepository;
+    private final ProductAbstractionMapper abstractionMapper;
+    @PersistenceContext
+    private EntityManager entityManager;
 
-    public List<ProductSpecificDetails> getProductsWhenSearchBy(String searchBy) {
-        List<ProductSpecificDetails> res = new ArrayList<>();
-        List<Product> products = productRepository.findAll();
-        /*
-        for (Product product : products) {
-            if (contains(product.getTitle(), searchBy) || contains(product.getDescription(), searchBy) ||
-                    contains(product.getPrice().toString(), searchBy) || contains(product.getCategory(), searchBy) ||
-                    contains(product.getInStock().toString(), searchBy)) {
-                if (product.getInStock() <= 0) continue;
-                log.info("HOHO: Marry Christmas ... Product #{} is Matching ...", product.getProductId());
-                ProductSpecificDetails productSpecificDetails = ProductSpecificDetails.builder().
-                        productId(product.getProductId()).
-                        title(product.getTitle()).
-                        description(product.getDescription()).
-                        price(product.getPrice()).
-                        image(product.getImage()).
-                        inStock(product.getInStock()).
-                        build();
-                res.add(productSpecificDetails);
-            }
+    public List<ProductAbstractionRequest> getProducts(
+            String searchBy,
+            final String filterByCategory,
+            final String filterByPrice,
+            final String filterByRate,
+            final String offset,
+            final String limit
+    ) {
+        List<ProductAbstractionRequest> res = new ArrayList<>();
+
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);
+        Root<Product> root = criteriaQuery.from(Product.class);
+
+        List<Predicate> finalPredicates = new ArrayList<>();
+        // search by keyword in product title
+        if (searchBy != null && !searchBy.isEmpty()) {
+            searchBy = searchBy.toLowerCase();
+
+            // Expression<List<String>> keyFeatures = root.get("description").get("keyFeatures");
+            Predicate searchPredicate = builder.or(
+                    builder.like(builder.lower(root.get("basicInfo").get("category")), "%" + searchBy + "%"),
+                    builder.like(builder.lower(root.get("basicInfo").get("title")), "%" + searchBy + "%"),
+                    builder.like(builder.lower(root.get("description").get("description")), "%" + searchBy + "%"),
+                    builder.like(root.get("basicInfo").get("price").as(String.class), "%" + searchBy + "%"),
+                    builder.like(root.get("basicInfo").get("inStock").as(String.class), "%" + searchBy + "%"),
+                    builder.like(root.get("basicInfo").get("rate").as(String.class), "%" + searchBy + "%")
+            );
+            finalPredicates.add(searchPredicate);
+            // log.info("After Search Term");
         }
-        */
+
+        // filter by category
+        if (filterByCategory != null && !filterByCategory.isEmpty()) {
+            Predicate filterByCategoryPredicate = builder.equal(root.get("basicInfo").get("category"), filterByCategory);
+            finalPredicates.add(filterByCategoryPredicate);
+            // log.info("After Filter By Category");
+        }
+
+        // filter by rate
+        Predicate filterByRatePredicate = builder.greaterThanOrEqualTo(root.get("basicInfo").get("rate"), getRate(filterByRate));
+        log.info("After Filter By Rate");
+
+        Predicate finalPredicate;
+        switch (finalPredicates.size()) {
+            case 2:
+                finalPredicate = builder.and(filterByRatePredicate, finalPredicates.get(0), finalPredicates.get(1));
+                break;
+            case 1:
+                finalPredicate = builder.and(filterByRatePredicate, finalPredicates.get(0));
+                break;
+            default:
+                finalPredicate = builder.and(filterByRatePredicate);
+                break;
+        }
+        criteriaQuery.where(finalPredicate);
+
+        // filter by price
+        switch (filterByPrice) {
+            case "Descending":
+                criteriaQuery.orderBy(builder.asc(root.get("basicInfo").get("price")));
+                break;
+            case "Ascending":
+                criteriaQuery.orderBy(builder.desc(root.get("basicInfo").get("price")));
+                break;
+        }
+        // log.info("After Filter By Price");
+
+        // Limit By Specific Offset
+        TypedQuery<Product> productsQuery = entityManager.createQuery(criteriaQuery);
+        productsQuery.setFirstResult(getNumber(offset));
+        productsQuery.setMaxResults(getNumber(limit));
+
+        List<Product> products = productsQuery.getResultList();
+        // log.info("Size of List Products: {}", products.size());
+        products.forEach(product -> {
+            res.add(abstractionMapper.map(product));
+            log.info("Product #{}", product.getProductId());
+        });
+
+        entityManager.close();
         return res;
     }
 
-    private boolean contains(String s1, String s2) {
-        return Pattern.compile(Pattern.quote(s2), Pattern.CASE_INSENSITIVE).matcher(s1).find();
+    private int getNumber(final String strNum) {
+        int review;
+        try {
+            review = strNum.equals("") ? 0 : Integer.parseInt(strNum);
+            return review;
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    private double getRate(String rate) {
+        double review;
+        try {
+            review = rate.equals("") ? 0.0 : Double.parseDouble(rate);
+            return review;
+        } catch (NumberFormatException e) {
+            return 0.0;
+        }
     }
 }

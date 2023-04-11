@@ -1,12 +1,12 @@
 package com.example.panadol.model.product;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "productBasicInfo")
 public class ProductBasicInfo {
@@ -16,6 +16,11 @@ public class ProductBasicInfo {
     private Long basicInfoId;
     private String title;
     private Double price;
+    private Double rate;
     private String category;
     private Integer inStock;
+
+    public ProductBasicInfo() {
+        this.rate = 0.0;
+    }
 }

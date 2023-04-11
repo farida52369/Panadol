@@ -8,7 +8,6 @@ import com.example.panadol.model.auth.VerificationToken;
 import com.example.panadol.repository.auth.UserRepository;
 import com.example.panadol.repository.auth.VerificationTokenRepository;
 import com.example.panadol.response.GenericResponse;
-import com.example.panadol.service.JavaMailService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -140,6 +139,6 @@ public class VerTokenService {
         final VerificationToken verificationToken = new VerificationToken(token, user);
         verificationTokenRepository.save(verificationToken);
 
-        sendMailForVerification(user.getEmail(), token, FORGET_PASSWORD);
+        sendMailForVerification(user.getEmail(), token, type);
     }
 }
