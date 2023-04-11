@@ -20,17 +20,17 @@ export class HomeComponent implements OnInit {
   // Products
   productsToBeViewed: Array<ProductRequestPayload> = [];
 
-  details: any;
   productToCart: any;
   @ViewChild("noProductFound") noProductEle: ElementRef | undefined;
   loggin!: boolean;
   isManager!: Boolean;
   searchBy!: string;
-  page: any = 1;
   ownedProducts: boolean = false;
   purchasedProducts: boolean = false;
+  // Paging and See More
   offset: number = 0;
-  limit: number = 10;
+  limit: number = 20;
+  showMore: boolean = true;
 
   constructor(
     private authService: AuthService,
@@ -42,24 +42,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggin = this.authService.isLoggedIn();
-    // this.showProducts();
-    // if (this.loggin) this.isManagerSubscribe();
+    this.showProducts();
     this.authService.clearSessionStorage();
 
     // Init subscribers
     this.initSubscribers();
-
-    // ADD
-    /*
-    this.productsToBeViewed.push({
-      productId: "1",
-      image: "",
-      title: "HEllo",
-      rate: 4,
-      inStock: 45,
-      price: 1200,
-    });
-    */
   }
 
   private initSubscribers() {
@@ -95,15 +82,12 @@ export class HomeComponent implements OnInit {
         this.searchTerm || "",
         this.categoryFilter || "",
         this.priceFilter || "",
-        this.reviewFilter || "0.0",
-        this.offset,
-        this.limit
+        this.reviewFilter || "0.0"
       )
       .subscribe({
         next: (data) => {
           this.productsToBeViewed = data;
-          // this.offset += this.limit;
-          console.info("Get products from server!");
+          this.handleRate(0, data.length);
         },
         error: (error) => {
           console.error(`Error: ${error}`);
@@ -120,82 +104,55 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  handlePageChange(e: any) {
-    this.page = e;
-    console.log(this.page);
+  handleRate(from: number, to: number): void {
+    for (let i = from; i < to; i++) {
+      const num = this.roundToHalf(this.productsToBeViewed[i].rate);
+      const fullStars = Math.floor(num);
+      const hasHalfStar = num % 1 !== 0;
+      const halfStar = hasHalfStar ? [1] : [];
+      const fullStarList = Array(fullStars)
+        .fill(1)
+        .map((_, i) => i + 1);
+      const borderStar = Array(5 - fullStars - halfStar.length)
+        .fill(1)
+        .map((_, i) => i + 1);
+      this.productsToBeViewed[i].star = fullStarList;
+      this.productsToBeViewed[i].star_border = borderStar;
+      this.productsToBeViewed[i].star_half = halfStar;
+    }
   }
 
-  getCategory(category: string) {
-    this.setting();
-    this.searchBy = `Category: ${category}`;
-    // Adjust it on the services file -- Add the specific route on the server side
-    this.productService.getProductsByCategory(category).subscribe((res) => {
-      const productsDiv = document.getElementById("products");
-      if (productsDiv) productsDiv.innerHTML = "";
-      if (res.length === 0) {
-        this.details = [];
-        this.setNoProductDetails();
-      } else {
-        this.details = res;
-        this.setNoProductToNull();
-      }
-      // this.details = res;
-    });
+  roundToHalf(num: number): number {
+    const decimal = num - Math.floor(num);
+    if (decimal < 0.25) {
+      return Math.floor(num) + 0.0;
+    } else if (decimal >= 0.25 && decimal < 0.75) {
+      return Math.floor(num) + 0.5;
+    } else {
+      return Math.ceil(num);
+    }
   }
 
-  sortBy(sort: string) {
-    this.setting();
-    this.searchBy = `Sorting By: ${sort}`;
-    this.setNoProductToNull();
-    this.productService.getProductsSorted(sort).subscribe((res) => {
-      const productsDiv = document.getElementById("products");
-      if (productsDiv) productsDiv.innerHTML = "";
-      if (res.length === 0) {
-        this.details = [];
-        this.setNoProductDetails();
-      } else {
-        this.details = res;
-        this.setNoProductToNull();
-      }
-      // this.details = res;
-    });
-  }
-
-  getProductsByWord(word: any) {
-    this.setting();
-    /*
-    if (word) {
-      this.searchBy = `Word: ${word}`;
-      this.searchService.getProductsByWord(word).subscribe((res) => {
-        const productsDiv = document.getElementById("products");
-        if (productsDiv) productsDiv.innerHTML = "";
+  showProducts() {
+    // this.setting();
+    // this.setNoProductToNull();
+    this.productService
+      .getAllProducts(this.offset, this.limit)
+      .subscribe((res) => {
+        const from = this.offset * this.limit;
+        const to = this.offset * this.limit + res.length;
         if (res.length === 0) {
-          this.details = [];
-          this.setNoProductDetails();
+          this.showMore = false;
+          console.log("No More Products ...");
+          // this.setNoProductDetails();
         } else {
-          this.details = res;
-          this.setNoProductToNull();
+          this.productsToBeViewed = [...this.productsToBeViewed, ...res];
+          this.handleRate(from, to);
+          this.offset += 1;
+          console.log(`Products from ${from} to ${to} => ${res}`);
+          // this.setNoProductToNull();
         }
       });
-    } else this.showProducts();*/
-  }
-
-  private showProducts() {
-    this.setting();
-    this.setNoProductToNull();
-    this.productService.getAllProducts().subscribe((res) => {
-      const productsDiv = document.getElementById("products");
-      if (productsDiv) productsDiv.innerHTML = "";
-      console.log("All Products => " + res);
-      if (res.length === 0) {
-        this.details = [];
-        this.setNoProductDetails();
-      } else {
-        this.details = res;
-        this.setNoProductToNull();
-      }
-      // this.details = res;
-    });
   }
 
   viewProduct(id: any) {
@@ -212,7 +169,7 @@ export class HomeComponent implements OnInit {
 
   addToCart(productIndex: number) {
     this.setting();
-    this.productToCart = this.details[productIndex];
+    this.productToCart = this.productsToBeViewed[productIndex];
     this.productToCart.quantity = 1;
     this.productToCart.totalPrice =
       this.productToCart.quantity * this.productToCart.price;
@@ -248,10 +205,10 @@ export class HomeComponent implements OnInit {
         const productsDiv = document.getElementById("products");
         if (productsDiv) productsDiv.innerHTML = "";
         if (res.length === 0) {
-          this.details = [];
+          // this.details = [];
           this.setNoProductDetails();
         } else {
-          this.details = res;
+          // this.details = res;
           this.setNoProductToNull();
         }
       });
@@ -266,10 +223,10 @@ export class HomeComponent implements OnInit {
         const productsDiv = document.getElementById("products");
         if (productsDiv) productsDiv.innerHTML = "";
         if (res.length === 0) {
-          this.details = [];
+          // this.details = [];
           this.setNoProductDetails();
         } else {
-          this.details = res;
+          // this.details = res;
           this.setNoProductToNull();
         }
       });

@@ -1,6 +1,6 @@
 <div class="sidebar">
   <div class="categories">
-    <h6 class="header-title">Categories</h6>
+    <p class="header-title">Categories</p>
     <span *ngIf="category">
       <a class="a-link" (click)="resetCategory()">&lt; Clear</a>
     </span>
@@ -24,7 +24,7 @@
 
   <br />
   <div class="price">
-    <h6 class="header-title">Price</h6>
+    <p class="header-title">Price</p>
     <span *ngIf="price">
       <a class="a-link" (click)="resetPrice()">&lt; Clear</a>
     </span>
@@ -46,7 +46,7 @@
 
   <br />
   <div class="rate">
-    <h6 class="header-title">Avg. Customer Review</h6>
+    <p class="header-title">Avg. Customer Review</p>
     <span *ngIf="review">
       <a class="a-link" (click)="resetReview()">&lt; Clear</a>
     </span>
@@ -61,10 +61,7 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="four-star">
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3, 4]">
-          star
-        </mat-icon>
-        <mat-icon class="mat-icon-star">star_border</mat-icon>
+        <app-stars-rate [star]="[1, 2, 3, 4]" [start_border]="[1]"></app-stars-rate>
       </label>
     </div>
 
@@ -79,12 +76,7 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="three-star">
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3]">
-          star
-        </mat-icon>
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2]">
-          star_border
-        </mat-icon>
+        <app-stars-rate [star]="[1, 2, 3]" [start_border]="[1, 2]"></app-stars-rate>
       </label>
     </div>
 
@@ -99,10 +91,7 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="two-star">
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2]">star</mat-icon>
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3]">
-          star_border
-        </mat-icon>
+        <app-stars-rate [star]="[1, 2]" [start_border]="[1, 2, 3]"></app-stars-rate>
       </label>
     </div>
 
@@ -117,10 +106,7 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="one-star">
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1]">star</mat-icon>
-        <mat-icon class="mat-icon-star" *ngFor="let i of [1, 2, 3, 4]">
-          star_border
-        </mat-icon>
+        <app-stars-rate [star]="[1]" [start_border]="[1, 2, 3, 4]"></app-stars-rate>
       </label>
     </div>
   </div>

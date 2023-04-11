@@ -26,13 +26,11 @@ public class SearchController {
             @RequestParam("searchBy") String searchBy,
             @RequestParam("filterByCategory") String filterByCategory,
             @RequestParam("filterByPrice") String filterByPrice,
-            @RequestParam("filterByReview") String filterByReview,
-            @RequestParam("offset") String offset,
-            @RequestParam("limit") String limit
+            @RequestParam("filterByReview") String filterByReview
     ) {
         log.info("{}, {}, {}, {}", searchBy, filterByCategory, filterByPrice, filterByReview);
         return new ResponseEntity<>(
-                searchService.getProducts(searchBy, filterByCategory, filterByPrice, filterByReview, offset, limit),
+                searchService.getProducts(searchBy, filterByCategory, filterByPrice, filterByReview),
                 HttpStatus.OK
         );
     }

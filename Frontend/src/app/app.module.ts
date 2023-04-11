@@ -25,6 +25,7 @@ import { ContainerComponent } from './auth/container/container.component';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { StarsRateComponent } from './stars-rate/stars-rate.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { MatIconModule } from '@angular/material/icon';
     ForgetPasswordComponent,
     ContainerComponent,
     HeaderComponent,
-    SideBarComponent
+    SideBarComponent,
+    StarsRateComponent
   ],
   imports: [
     BrowserModule,
