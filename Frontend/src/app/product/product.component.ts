@@ -108,16 +108,4 @@ export class ProductComponent {
     }
   }
 
-  saveChanges() {
-    this.productService.editProduct({
-      productId: this.product.productId,
-      title: this.product.title,
-      price: this.product.price,
-      category: this.product.category,
-      inStock: this.product.inStock,
-      description: this.product.description
-    }).subscribe(() => {
-      console.log("Done Editing Product!!");
-    });
-  }
 }

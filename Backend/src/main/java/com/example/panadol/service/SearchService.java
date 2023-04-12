@@ -1,6 +1,6 @@
 package com.example.panadol.service;
 
-import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.dto.product.SomeProductInfoResponse;
 import com.example.panadol.mapper.product.ProductAbstractionMapper;
 import com.example.panadol.model.product.Product;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +26,13 @@ public class SearchService {
     @PersistenceContext
     private final EntityManager entityManager;
 
-    public List<ProductAbstractionRequest> getProducts(
+    public List<SomeProductInfoResponse> getProducts(
             String searchBy,
             final String filterByCategory,
             final String filterByPrice,
             final String filterByRate
     ) {
-        List<ProductAbstractionRequest> res = new ArrayList<>();
+        List<SomeProductInfoResponse> res = new ArrayList<>();
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Product> criteriaQuery = builder.createQuery(Product.class);

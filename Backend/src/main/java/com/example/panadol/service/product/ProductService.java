@@ -1,18 +1,22 @@
 package com.example.panadol.service.product;
 
-import com.example.panadol.dto.ProductAllInfo;
-import com.example.panadol.dto.ProductEdit;
-import com.example.panadol.dto.ProductResponse;
-import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.dto.product.BasicInfoRequest;
+import com.example.panadol.dto.product.EditableProductInfoResponse;
+import com.example.panadol.dto.product.DescriptionRequest;
+import com.example.panadol.dto.product.SomeProductInfoResponse;
 import com.example.panadol.mapper.product.ProductAbstractionMapper;
+import com.example.panadol.mapper.product.ProductBasicInfoToRequestMapper;
+import com.example.panadol.model.auth.AppUser;
 import com.example.panadol.model.product.Product;
 import com.example.panadol.repository.product.ProductRepository;
+import com.example.panadol.service.auth.AuthService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -25,11 +29,13 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final AuthService authService;
+    private final ProductBasicInfoToRequestMapper productBasicInfoToRequestMapper;
     private final ProductAbstractionMapper abstractionMapper;
 
-    public List<ProductAbstractionRequest> getAllProducts(final int offset, final int limit) {
+    public List<SomeProductInfoResponse> getAllProducts(final int offset, final int limit) {
         log.info("Offset: {}, Limit: {}", offset, limit);
-        List<ProductAbstractionRequest> res = new ArrayList<>();
+        List<SomeProductInfoResponse> res = new ArrayList<>();
         Pageable pageable = PageRequest.of(offset, limit);
         Page<Product> productPage = productRepository.findAll(pageable);
         productPage.forEach(product -> {
@@ -40,43 +46,35 @@ public class ProductService {
         return res;
     }
 
-    public ProductResponse getSpecificProduct(Long id) {
+    public List<SomeProductInfoResponse> getCurrentUserProducts() {
+        List<SomeProductInfoResponse> res = new ArrayList<>();
+        AppUser user = authService.getCurrentUser();
+        List<Product> productPage = productRepository.findByOwnerId(user);
+        productPage.forEach(product -> {
+            res.add(abstractionMapper.map(product));
+            log.info("Product #{}", product.getProductId());
+        });
+        // log.info("Products To Be Sent: {}", res.size());
+        return res;
+    }
+
+    public EditableProductInfoResponse getSpecificProduct(final Long id) {
         Product product = productRepository.getById(id);
-        return ProductResponse.builder().
-                productId(product.getProductId()).
-//                title(product.getTitle()).
-//                description(product.getDescription()).
-//                price(product.getPrice()).
-//                inStock(product.getInStock()).
-//                category(product.getCategory()).
-//                image(product.getImage()).
-//                createdDate(product.getCreatedDate()).
-        build();
-    }
-
-    public ProductAllInfo productAllInfo(Long productId, String email) {
-        Product product = productRepository.getById(productId);
-        return ProductAllInfo.builder().
-                productId(productId).
-//                price(product.getPrice()).
-//                isOwner(product.getManager().getEmail().equalsIgnoreCase(email)).
-//                owner(email).
-//                image(product.getImage()).
-//                createdDate(product.getCreatedDate()).
-//                inStock(product.getInStock()).
-//                title(product.getTitle()).
-//                description(product.getDescription()).
-//                category(product.getCategory()).
-        build();
-    }
-
-    public void editProduct(ProductEdit productEdit) {
-        Product product = productRepository.getById(productEdit.getProductId());
-//        product.setInStock(productEdit.getInStock());
-//        product.setCategory(productEdit.getCategory());
-//        product.setPrice(productEdit.getPrice());
-//        product.setTitle(productEdit.getTitle());
-//        product.setDescription(productEdit.getDescription());
-        productRepository.save(product);
+        EditableProductInfoResponse productInfoResponse = new EditableProductInfoResponse();
+        productInfoResponse.setBasicInfo(productBasicInfoToRequestMapper.map(product.getBasicInfo()));
+        List<String> keyFeatures = product.getDescription().getKeyFeatures();
+        // log.info("{}", keyFeatures.get(0));
+        productInfoResponse.setDescription(
+                new DescriptionRequest(product.getDescription().getDescription(), keyFeatures)
+        );
+        List<byte[]> images = new ArrayList<>(6);
+        product.getImageList().forEach((productImage -> {
+            images.add(productImage.getImage());
+            // log.info("Image: {}", productImage);
+        }));
+        productInfoResponse.setImages(images);
+        // Removing this line makes an Error 500 :)
+        log.info("Final: {}", productInfoResponse);
+        return productInfoResponse;
     }
 }

@@ -1,17 +1,18 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ProductService } from "../services/product/product.service";
 import { BasicInfoPayload } from "./add-item-payload/basic-info.payload";
 import { DescriptionPayload } from "./add-item-payload/description.payload";
 import { ImagesPayload } from "./add-item-payload/images.payload";
+import { SomeProductInfoPayload } from "./add-item-payload/some-product-info.payload";
 
 @Component({
   selector: "app-add-item",
   templateUrl: "./add-item.component.html",
   styleUrls: ["./add-item.component.css"],
 })
-export class AddItemComponent {
+export class AddItemComponent implements OnInit {
   // Forms Needed
   basicInfoForm!: FormGroup;
   descriptionForm!: FormGroup;
@@ -24,18 +25,42 @@ export class AddItemComponent {
   inputImages: ImagesPayload[] = [];
   // Steps
   step: number = 1;
+  // Edit Or Not
+  isEdit!: boolean;
+  productId!: number;
+  product!: SomeProductInfoPayload;
+  // Template Image
+  uploadedImage: string = "/assets/upload.svg";
 
-  constructor(private productService: ProductService, private router: Router) {
+  constructor(
+    private productService: ProductService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     this.formParams = new FormData();
     this.initForms();
     this.initImages();
-    this.addInput();
+    this.addInput("");
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.isEdit = params["isEdit"] === "true";
+      this.productId = params["productId"];
+      this.productService.getSpecificProduct(this.productId).subscribe({
+        next: (res) => {
+          this.product = res;
+          console.log(this.product);
+          this.settingForms();
+        },
+      });
+      // console.log(typeof this.productId + " " + this.productId);
+    });
   }
 
   private initImages(): void {
-    const uploadedImage = "/assets/upload.svg";
     for (let i = 0; i < 6; i++) {
-      this.inputImages.push({ value: uploadedImage });
+      this.inputImages.push({ value: this.uploadedImage });
     }
   }
 
@@ -63,13 +88,46 @@ export class AddItemComponent {
     });
   }
 
+  private settingForms() {
+    this.basicInfoForm.setValue({
+      title: this.product.basicInfo.title,
+      price: this.product.basicInfo.price,
+      inStock: this.product.basicInfo.inStock,
+      category: this.product.basicInfo.category,
+    });
+
+    for (let i = 0; i < this.product.description.keyFeatures.length; i++) {
+      const feature = this.product.description.keyFeatures[i];
+      if (i === 0) {
+        this.keyFeatures.at(0).setValue(feature);
+      } else this.addInput(feature);
+    }
+
+    this.descriptionForm.setValue({
+      description: this.product.description.description,
+      keyFeatures: this.product.description.keyFeatures,
+    });
+
+    for (let i = 0; i < 6; i++) {
+      const imageData = this.product.images[i];
+      if (imageData) {
+        this.inputImages[i].value = "data:image/jpeg;base64," + imageData;
+        console.log(`Data Image: #${i}`);
+      }
+    }
+  }
+
   get keyFeatures(): FormArray {
     return this.descriptionForm.get("keyFeatures") as FormArray;
   }
 
-  addInput() {
+  addMore() {
+    this.addInput("");
+  }
+
+  addInput(input: string) {
     this.inputsKeyFeatures.push({});
-    this.keyFeatures.push(new FormControl("", [Validators.required]));
+    this.keyFeatures.push(new FormControl(input, [Validators.required]));
   }
 
   removeLastAddedInput() {
@@ -77,7 +135,7 @@ export class AddItemComponent {
     if (len > 1) {
       this.inputsKeyFeatures.pop();
       this.keyFeatures.removeAt(len - 1);
-      console.info("Length: " + this.keyFeatures.length);
+      // console.info("Length: " + this.keyFeatures.length);
     }
   }
 
@@ -106,11 +164,9 @@ export class AddItemComponent {
   }
 
   public onFileChange(event: any, index: number): void {
-    console.log(`event: ${event}`);
+    // console.log(`event: ${event}`);
     const files = event.target.files;
-    console.log("files: " + files);
-    if (files.length === 0) return undefined;
-
+    // console.log("Files On Change: " + files);
     this.inputImages[index].file = files[0];
 
     // No need for that check _ already handled ..
@@ -122,6 +178,7 @@ export class AddItemComponent {
     const reader = new FileReader();
     reader.readAsDataURL(files[0]);
     reader.onload = (_event) => {
+      // resder.result ---> data:image/jpeg;base64,image_bytes
       this.inputImages[index].value = reader.result;
     };
   }
@@ -131,7 +188,7 @@ export class AddItemComponent {
       if (this.basicInfoForm.invalid) return;
       this.step++;
 
-      // Add data
+      // Add Data: Basic Info
       const basicInfoPayload: BasicInfoPayload = {
         title: this.basicInfoForm.get("title")?.value,
         price: this.basicInfoForm.get("price")?.value,
@@ -150,7 +207,7 @@ export class AddItemComponent {
       if (this.descriptionForm.invalid) return;
       this.step++;
 
-      // Add data
+      // Add Data: Description
       const keyFeaturesRes: Array<string> = [];
       for (let i = 0; i < this.inputsKeyFeatures.length; i++) {
         keyFeaturesRes.push(
@@ -174,6 +231,7 @@ export class AddItemComponent {
   }
 
   public endOfStory() {
+    // Add Data: Images
     // Only to stop a stupid error :)
     const emptyContent = new Uint8Array([]);
     const emptyFile: File = new File([emptyContent], "empty.txt", {
@@ -192,11 +250,43 @@ export class AddItemComponent {
         imageFile.name
       );
     }
-    console.log(this.formParams.getAll("images"));
 
+    // Send to Server
+    if (this.isEdit) {
+      this.formParams.append(
+        "productId",
+        new Blob([JSON.stringify(this.productId)], {
+          type: "application/json",
+        })
+      );
+      this.editProduct();
+    } else {
+      this.createNewProduct();
+    }
+  }
+
+  private editProduct(): void {
+    this.productService.editProduct(this.formParams).subscribe({
+      next: () => {
+        this.router.navigate(["/home"]).then(() => {
+          location.reload();
+        });
+      },
+      error: () => {
+        console.log("Error when editing product!");
+      },
+      complete: () => {
+        console.info("Process of editing product is completed!");
+      },
+    });
+  }
+
+  private createNewProduct(): void {
     this.productService.createProduct(this.formParams).subscribe({
       next: () => {
-        this.router.navigate(["/home"]);
+        this.router.navigate(["/home"]).then(() => {
+          location.reload();
+        });
       },
       error: () => {
         console.log("Error when adding new product!");

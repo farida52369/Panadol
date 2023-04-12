@@ -57,6 +57,7 @@ export class AuthService {
         },
         complete: () => {
           this.clearLocalStorage();
+          this.clearSessionStorage();
           this.router.navigate(["/home"]).then(() => {
             location.reload();
           });
@@ -79,6 +80,10 @@ export class AuthService {
 
   public getRefreshToken(): string {
     return this.localStorage.retrieve("refresh_token");
+  }
+
+  public isSeller(): boolean {
+    return this.getUserRole() === "SELLER";
   }
 
   public getUserRole(): string {

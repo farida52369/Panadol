@@ -1,6 +1,6 @@
 package com.example.panadol.controller;
 
-import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.dto.product.SomeProductInfoResponse;
 import com.example.panadol.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class SearchController {
     private final SearchService searchService;
 
     @GetMapping()
-    public ResponseEntity<List<ProductAbstractionRequest>> getAllProductsMatchWithBy(
+    public ResponseEntity<List<SomeProductInfoResponse>> getAllProductsMatchWithBy(
             @RequestParam("searchBy") String searchBy,
             @RequestParam("filterByCategory") String filterByCategory,
             @RequestParam("filterByPrice") String filterByPrice,

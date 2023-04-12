@@ -15,8 +15,8 @@
 .product {
   position: relative;
   cursor: pointer;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
-  background-color: rgb(241, 241, 241);
+  box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
+  background-color: rgb(245, 245, 245);
   /* product box width 260px */
   width: 260px;
   padding: 2px 2px 20px 2px;
@@ -75,9 +75,9 @@
 .stock-info {
   padding: 5px;
   font-size: 16px;
-  background-color: #f80909;
+  background-color: #b00000;
   color: white;
-  cursor: pointer;
+  cursor: text;
 }
 
 /* See More */
@@ -125,4 +125,18 @@
 .label {
   font-size: 15px;
   color: black;
+}
+
+/* Buttons */
+.seller-actions {
+  margin-top: 26px;
+  margin-bottom: 10px;
+}
+
+.btn-primary {
+  width: auto;
+  background-color: #fd571b !important;
+  font-weight: 500;
+  font-size: 18px;
+  margin-right: 12px;
 }

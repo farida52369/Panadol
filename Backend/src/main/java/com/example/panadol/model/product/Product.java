@@ -27,7 +27,7 @@ public class Product {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "description", referencedColumnName = "descriptionId")
     private ProductDescription description;
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name = "images",
             joinColumns = @JoinColumn(name = "productId"),
