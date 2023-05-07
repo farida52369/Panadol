@@ -1,29 +1,35 @@
-import { Component, OnInit } from '@angular/core';
-import { CartService } from './cart.service';
-import { Router } from '@angular/router';
-import { Cart } from '../dto/data';
+import { Component, OnInit } from "@angular/core";
+import { CartService } from "./cart.service";
+import { Router } from "@angular/router";
+import { CartRequestPayload } from "./cart-request.payload";
 
 @Component({
-  selector: 'app-cart',
-  templateUrl: './cart.component.html',
-  styleUrls: ['./cart.component.css'],
+  selector: "app-cart",
+  templateUrl: "./cart.component.html",
+  styleUrls: ["./cart.component.css"],
 })
 export class CartComponent implements OnInit {
   shipping: number = 5.0;
-  product: Array<Cart> = [];
-  subtotal: any = 0;
-  total: any = 0;
-  tax: any;
+  product: Array<CartRequestPayload> = [];
+  TAX_PERCENTAGE: any = 1.0;
+  subtotal: any = 0.0;
+  total: any = 0.0;
+  tax: any = 0.0;
+
+  constructor(private cartService: CartService, private router: Router) {}
 
   ngOnInit(): void {
     this.setCartProducts();
     this.updateTotals();
   }
-  
-  constructor(private cartService: CartService, private router: Router) {}
-  
+
   setCartProducts() {
-    this.product = JSON.parse(this.cartService.getCart());
+    this.product = this.cartService.getCart();
+  }
+
+  viewProduct(productId: number) {
+    // View Product Page
+    console.log(`Show product ${productId}`);
   }
 
   removeProduct(id: any) {
@@ -33,55 +39,41 @@ export class CartComponent implements OnInit {
   }
 
   deleteAll() {
-    for (let i = 0; i < this.product.length; i += 1) {
-      this.product.splice(i);
-    }
+    this.product = [];
     this.cartService.clearCart();
     this.updateTotals();
   }
 
-  addProduct(id: any) {
+  addOneItem(id: number) {
     console.log(
-      'Cart quantity: ' +
+      "Cart quantity: " +
         this.product[id].quantity +
-        '\nIn Stock: ' +
+        "\nIn Stock: " +
         this.product[id].inStock
     );
-    // console.log('Product: ' + this.product[id])
     if (this.product[id].inStock <= this.product[id].quantity) return;
     this.product[id].quantity++;
-    const quan = this.product[id].quantity;
     this.cartService.storageCart(this.product[id]);
-    this.updateProductSubtotal(id, quan);
-  }
-
-  subtractProduct(id: any) {
-    let quan = this.product[id].quantity;
-    if (quan == 1) {
-      quan = 1;
-    } else {
-      this.product[id].quantity--;
-      quan = this.product[id].quantity;
-    }
-    this.cartService.storageCart(this.product[id]);
-    this.updateProductSubtotal(id, quan);
-  }
-
-  updateProductSubtotal(id: any, quantity: any) {
-    var subtotalPrice = this.product[id].price * quantity;
-    this.product[id].totalPrice = Number(subtotalPrice.toFixed(2));
     this.updateTotals();
+  }
+
+  subtractOneItem(id: number) {
+    let quantity = this.product[id].quantity;
+    if (quantity > 1) {
+      this.product[id].quantity--;
+      this.cartService.storageCart(this.product[id]);
+      this.updateTotals();
+    }
   }
 
   updateTotals() {
     this.total = 0.0;
-    let subt = 0;
+    let subtotal: number = 0;
     for (let i = 0; i < this.product.length; i += 1) {
-      subt += this.product[i].totalPrice;
+      subtotal += this.product[i].quantity * this.product[i].price;
     }
-    this.subtotal = subt.toFixed(2);
-    this.tax = (this.subtotal * 0.05).toFixed(2);
-    console.log(this.subtotal);
+    this.subtotal = subtotal.toFixed(2);
+    this.tax = (this.subtotal * (this.TAX_PERCENTAGE / 100.0)).toFixed(2);
     if (this.subtotal > 0.0) {
       this.total = (
         Number(this.subtotal) +
@@ -92,10 +84,10 @@ export class CartComponent implements OnInit {
   }
 
   backHome() {
-    this.router.navigateByUrl('home', { state: { logged: true } });
+    this.router.navigate(["/home"]);
   }
 
-  check() {
-    this.router.navigateByUrl('checkout', { state: { logged: true } });
+  checkout() {
+    // Checkout :)
   }
 }

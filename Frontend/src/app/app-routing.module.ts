@@ -36,7 +36,7 @@ const routes: Routes = [
     component: OfferProductComponent,
     canActivate: [AuthGuard],
   },
-  { path: "user/cart", component: CartComponent, canActivate: [AuthGuard] },
+  { path: "cart", component: CartComponent, canActivate: [AuthGuard] },
   { path: "checkout", component: CheckoutComponent, canActivate: [AuthGuard] },
   { path: "product", component: ProductComponent },
   { path: "forget-password", component: ForgetPasswordComponent},

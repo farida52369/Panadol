@@ -49,13 +49,16 @@ a {
 }
 
 a:hover {
-  color: #eb98aa;
+  color: #d64b4b;
 }
 
 #site-header h1 span {
-  color: #eb98aa;
+  color: #d64b4b;
   border-radius: 12px;
 }
+
+.remove,
+.content,
 .delete-all {
   cursor: pointer;
 }
@@ -93,7 +96,7 @@ a:hover {
 }
 
 #cart a {
-  color: #eb98aa;
+  color: #d64b4b;
   text-decoration: none;
 
   -webkit-transition: color 0.2s linear;
@@ -114,7 +117,7 @@ a:hover {
 
 .product {
   border: 1px solid rgb(250, 247, 247);
-  margin: 20px 0;
+  margin: 34px 0;
   width: 100%;
   height: 195px;
   position: relative;
@@ -131,7 +134,7 @@ a:hover {
   border: 1px solid rgb(250, 247, 247);
   border-style: none none none none;
   float: left;
-  box-shadow: 0 0 15px 5px rgb(231, 226, 226);
+  box-shadow: 0 0 4px 2px rgb(231, 226, 226);
 }
 
 .product header {
@@ -153,7 +156,7 @@ a:hover {
 }
 
 .product header h3 {
-  background: #eb98aa;
+  background: #d64b4b;
   color: #fff;
   font-size: 22px;
   font-weight: 300;
@@ -172,15 +175,12 @@ a:hover {
   transition: bottom 0.2s linear;
 }
 
-.remove {
-  cursor: pointer;
-}
 
 .product .content {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   height: 140px;
-  padding: 0 20px;
+  padding: 0 15px;
   width: 75%;
   box-shadow: #000;
 }
@@ -209,8 +209,14 @@ a:hover {
   padding: 0 30px;
 }
 
+#quan,
+.full-price,
+.price {
+  cursor: text;
+}
+
 .product footer .full-price {
-  background: #eb98aa;
+  background: #d64b4b;
   color: #fff;
   float: right;
   font-size: 22px;
@@ -246,7 +252,7 @@ a:hover {
 
 .qt-plus:hover,
 .qt-minus:hover {
-  background: #eb98aa;
+  background: #d64b4b;
   color: #fff;
   cursor: pointer;
 }
@@ -295,61 +301,6 @@ a:hover {
 
 .right {
   float: right;
-}
-
-.btn {
-  cursor: pointer;
-  border-radius: 14px;
-  box-shadow: 1px 1px 5px 1px rgba(0, 0, 0, 0.8);
-  display: block;
-  color: #fff;
-  font-size: 22px;
-  font-weight: 300;
-  padding: 14px 0;
-  width: 260px;
-  text-align: center;
-  background-color: #f27dbe;
-}
-
-.btn:hover {
-  color: #fff;
-  background-color: #e03997;
-}
-
-.type {
-  background: #fcfcfc;
-  font-size: 13px;
-  padding: 10px 16px;
-  left: 100%;
-}
-
-.type,
-.color {
-  border: 1px solid #ccc;
-  border-style: none none solid none;
-  position: absolute;
-}
-
-.color {
-  width: 40px;
-  height: 40px;
-  right: -40px;
-}
-
-.red {
-  background: #cb5a5e;
-}
-
-.yellow {
-  background: #f1c40f;
-}
-
-.blue {
-  background: #3598dc;
-}
-
-.minused {
-  margin: 0 50px 0 0 !important;
 }
 
 .added {
