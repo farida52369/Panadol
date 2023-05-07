@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { AuthService } from "../auth/service/auth.service";
 import { SearchService } from "../home/search.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, Params, Router } from "@angular/router";
 
 @Component({
   selector: "app-header",
@@ -32,19 +32,15 @@ export class HeaderComponent implements OnInit {
   }
 
   private navigate(term: string) {
-    const homeRoute = this.route.pathFromRoot.find(
-      (route) => route.routeConfig?.path === "home"
-    );
-    const queryParams = { searchTerm: term };
-    if (homeRoute) {
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: queryParams,
-        queryParamsHandling: "merge",
-      });
-    } else {
-      this.router.navigate(["/home"], { queryParams: queryParams });
+    const allQueryParams: Params = {
+      ...this.route.snapshot.queryParams,
+      searchTerm: term,
+    };
+    if (!term && "searchTerm" in allQueryParams) {
+      delete allQueryParams["searchTerm"];
+      // console.log(queryParams);
     }
+    this.router.navigate(["/home"], { queryParams: allQueryParams });
   }
 
   myProductsService(): void {
