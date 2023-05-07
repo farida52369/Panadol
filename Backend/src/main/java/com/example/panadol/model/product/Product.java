@@ -27,12 +27,8 @@ public class Product {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "description", referencedColumnName = "descriptionId")
     private ProductDescription description;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(
-            name = "images",
-            joinColumns = @JoinColumn(name = "productId"),
-            inverseJoinColumns = @JoinColumn(name = "imageId")
-    )
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "product_image_list", joinColumns = @JoinColumn(name = "product_id"))
     private List<ProductImage> imageList;
     private Date createdDate;
 

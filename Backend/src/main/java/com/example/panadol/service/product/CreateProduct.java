@@ -91,7 +91,7 @@ public class CreateProduct {
             try {
                 final ProductImage productImage = new ProductImage();
                 productImage.setImage(file.getBytes());
-                productImage.setProductId(product);
+                // productImage.setProductId(product);
                 imageRepo.save(productImage);
                 product.getImageList().add(productImage);
             } catch (IOException e) {

@@ -2,17 +2,17 @@ import { Component, OnInit } from "@angular/core";
 import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ProductService } from "../services/product/product.service";
-import { BasicInfoPayload } from "./add-item-payload/basic-info.payload";
-import { DescriptionPayload } from "./add-item-payload/description.payload";
-import { ImagesPayload } from "./add-item-payload/images.payload";
-import { SomeProductInfoPayload } from "./add-item-payload/some-product-info.payload";
+import { BasicInfoPayload } from "./offer-product-payload/basic-info.payload";
+import { DescriptionPayload } from "./offer-product-payload/description.payload";
+import { ImagesPayload } from "./offer-product-payload/images.payload";
+import { SomeProductInfoPayload } from "./offer-product-payload/some-product-info.payload";
 
 @Component({
-  selector: "app-add-item",
-  templateUrl: "./add-item.component.html",
-  styleUrls: ["./add-item.component.css"],
+  selector: 'app-offer-product',
+  templateUrl: './offer-product.component.html',
+  styleUrls: ['./offer-product.component.css']
 })
-export class AddItemComponent implements OnInit {
+export class OfferProductComponent implements OnInit {
   // Forms Needed
   basicInfoForm!: FormGroup;
   descriptionForm!: FormGroup;
@@ -46,14 +46,16 @@ export class AddItemComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.isEdit = params["isEdit"] === "true";
-      this.productId = params["productId"];
-      this.productService.getSpecificProduct(this.productId).subscribe({
-        next: (res) => {
-          this.product = res;
-          console.log(this.product);
-          this.settingForms();
-        },
-      });
+      if (this.isEdit) {
+        this.productId = params["productId"];
+        this.productService.getSpecificProduct(this.productId).subscribe({
+          next: (res) => {
+            this.product = res;
+            console.log(this.product);
+            this.settingForms();
+          },
+        });
+      }
       // console.log(typeof this.productId + " " + this.productId);
     });
   }

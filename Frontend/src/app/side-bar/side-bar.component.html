@@ -61,7 +61,10 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="four-star">
-        <app-stars-rate [star]="[1, 2, 3, 4]" [start_border]="[1]"></app-stars-rate>
+        <app-stars-rate
+          [star]="[1, 2, 3, 4]"
+          [start_border]="[1]"
+        ></app-stars-rate>
       </label>
     </div>
 
@@ -76,7 +79,10 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="three-star">
-        <app-stars-rate [star]="[1, 2, 3]" [start_border]="[1, 2]"></app-stars-rate>
+        <app-stars-rate
+          [star]="[1, 2, 3]"
+          [start_border]="[1, 2]"
+        ></app-stars-rate>
       </label>
     </div>
 
@@ -91,7 +97,10 @@
         (change)="getAccrodingToCustomersReview()"
       />
       <label class="form-check-label" for="two-star">
-        <app-stars-rate [star]="[1, 2]" [start_border]="[1, 2, 3]"></app-stars-rate>
+        <app-stars-rate
+          [star]="[1, 2]"
+          [start_border]="[1, 2, 3]"
+        ></app-stars-rate>
       </label>
     </div>
 
@@ -104,9 +113,13 @@
         value="1"
         [(ngModel)]="review"
         (change)="getAccrodingToCustomersReview()"
+        [checked]="review === '1'"
       />
       <label class="form-check-label" for="one-star">
-        <app-stars-rate [star]="[1]" [start_border]="[1, 2, 3, 4]"></app-stars-rate>
+        <app-stars-rate
+          [star]="[1]"
+          [start_border]="[1, 2, 3, 4]"
+        ></app-stars-rate>
       </label>
     </div>
   </div>

@@ -44,9 +44,11 @@ export class SearchService {
     filterByPrice: string,
     filterByReview: string
   ): Observable<any> {
+    /*
     console.log(
       `Filter By Before Sending To Server ${filterByCategory}, ${filterByPrice}, ${filterByReview}`
     );
+    */
     const params = new HttpParams()
       .set("searchBy", searchBy)
       .set("filterByCategory", filterByCategory)

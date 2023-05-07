@@ -11,7 +11,7 @@ import { environment } from "src/environments/environment";
 import { LocalStorageService } from "ngx-webstorage";
 import { Router } from "@angular/router";
 import { ProductRequestPayload } from "src/app/home/product-request.payload";
-import { SomeProductInfoPayload } from "src/app/add-item/add-item-payload/some-product-info.payload";
+import { SomeProductInfoPayload } from "src/app/offer-product/offer-product-payload/some-product-info.payload";
 @Injectable({
   providedIn: "root",
 })

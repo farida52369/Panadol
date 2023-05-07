@@ -1,8 +1,12 @@
-<app-header></app-header>
+<app-header [searchTerm]="searchTerm"></app-header>
 <div class="container-fluid">
   <div class="row">
     <div class="col-lg-2 col-sm-3">
-      <app-side-bar></app-side-bar>
+      <app-side-bar
+        [category]="categoryFilter"
+        [price]="priceFilter"
+        [review]="reviewFilter"
+      ></app-side-bar>
     </div>
     <div class="col-lg-10 col-sm-8">
       <div class="products">
@@ -46,7 +50,12 @@
             </div>
             <!-- Two Buttons If You're a SELLER and need your products -->
             <div *ngIf="myPersonalProducts" class="seller-actions align-center">
-              <button class="btn btn-primary" (click)="editProduct(item.productId)">Edit</button>
+              <button
+                class="btn btn-primary"
+                (click)="editProduct(item.productId)"
+              >
+                Edit
+              </button>
               <button class="btn btn-primary">Delete</button>
             </div>
           </div>

@@ -24,7 +24,6 @@ export class HomeComponent implements OnInit {
   @ViewChild("noProductFound") noProductEle: ElementRef | undefined;
   loggin!: boolean;
   isManager!: Boolean;
-  searchBy!: string;
   // Paging and See More
   offset: number = 0;
   limit: number = 20;
@@ -45,11 +44,16 @@ export class HomeComponent implements OnInit {
     this.loggin = this.authService.isLoggedIn();
     this.route.queryParams.subscribe((params) => {
       this.myPersonalProducts = params["myProducts"] === "true";
-      // console.log(typeof this.myPersonalProducts)
+      this.searchTerm = params["searchTerm"] ?? "";
+      this.priceFilter = params["priceFilter"] ?? "";
+      this.reviewFilter = params["reviewFilter"] ?? "";
+      this.categoryFilter = params["categoryFilter"] ?? "";
     });
 
     if (this.myPersonalProducts) {
       this.showCurrentUserProducts();
+    } else if (!this.allEmpty()) {
+      this.getProductsBySearch();
     } else {
       this.showProducts();
       this.showMore = true;
@@ -180,7 +184,7 @@ export class HomeComponent implements OnInit {
   }
 
   editProduct(productId: any) {
-    this.router.navigate(["/user/add-item"], {
+    this.router.navigate(["offer-product"], {
       queryParams: { isEdit: true, productId: productId },
     });
   }

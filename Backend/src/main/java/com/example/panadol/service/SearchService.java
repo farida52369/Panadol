@@ -84,10 +84,10 @@ public class SearchService {
         // filter by price
         switch (filterByPrice) {
             case "Descending":
-                criteriaQuery.orderBy(builder.asc(root.get("basicInfo").get("price")));
+                criteriaQuery.orderBy(builder.desc(root.get("basicInfo").get("price")));
                 break;
             case "Ascending":
-                criteriaQuery.orderBy(builder.desc(root.get("basicInfo").get("price")));
+                criteriaQuery.orderBy(builder.asc(root.get("basicInfo").get("price")));
                 break;
         }
 
