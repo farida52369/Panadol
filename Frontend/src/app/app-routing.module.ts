@@ -4,7 +4,6 @@ import { LoginComponent } from "./auth/login/login.component";
 import { ProfileComponent } from "./profile/profile.component";
 import { HomeComponent } from "./home/home.component";
 import { RegisterComponent } from "./auth/register/register.component";
-import { AddItemComponent } from "./add-item/add-item.component";
 import { CartComponent } from "./cart/cart.component";
 import { CheckoutComponent } from "./checkout/checkout.component";
 import { ProductComponent } from "./product/product.component";
@@ -13,6 +12,7 @@ import { AuthGuard } from "./auth/guard/auth.guard";
 import { SellerGuard } from "./auth/guard/seller.guard";
 import { PreventLoginGuard } from "./auth/guard/prevent-login.guard";
 import { ForgetPasswordComponent } from "./auth/forget-password/forget-password.component";
+import { OfferProductComponent } from "./offer-product/offer-product.component";
 
 const routes: Routes = [
   { path: "home", component: HomeComponent },
@@ -32,8 +32,8 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: "user/add-item",
-    component: AddItemComponent,
+    path: "offer-product",
+    component: OfferProductComponent,
     canActivate: [AuthGuard],
   },
   { path: "user/cart", component: CartComponent, canActivate: [AuthGuard] },
@@ -59,9 +59,9 @@ export const routingComponents = [
   ProfileComponent,
   HomeComponent,
   RegisterComponent,
-  AddItemComponent,
+  OfferProductComponent,
   CartComponent,
   ProductComponent,
   CheckoutComponent,
-  ForgetPasswordComponent
+  ForgetPasswordComponent,
 ];

@@ -2,6 +2,7 @@ package com.example.panadol.service.product;
 
 import com.example.panadol.dto.product.BasicInfoRequest;
 import com.example.panadol.dto.product.DescriptionRequest;
+import com.example.panadol.exception.PanadolException;
 import com.example.panadol.mapper.product.ProductBasicInfoMapper;
 import com.example.panadol.model.product.Product;
 import com.example.panadol.model.product.ProductBasicInfo;
@@ -34,10 +35,32 @@ public class CreateProduct {
     private final ProductBasicInfoMapper basicInfoMapper;
 
     public void saveNewProduct(
-            BasicInfoRequest basicInfoRequest,
-            DescriptionRequest descriptionRequest,
-            MultipartFile[] images) {
+            final BasicInfoRequest basicInfoRequest,
+            final DescriptionRequest descriptionRequest,
+            final MultipartFile[] images
+    ) {
         final Product product = new Product();
+        helperToSaveOrEditProducts(product, basicInfoRequest, descriptionRequest, images);
+    }
+
+    public void editProduct(
+            final Long productId,
+            final BasicInfoRequest basicInfoRequest,
+            final DescriptionRequest descriptionRequest,
+            final MultipartFile[] images
+    ) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new PanadolException("Product Not Found")
+        );
+        helperToSaveOrEditProducts(product, basicInfoRequest, descriptionRequest, images);
+    }
+
+    private void helperToSaveOrEditProducts(
+            final Product product,
+            final BasicInfoRequest basicInfoRequest,
+            final DescriptionRequest descriptionRequest,
+            final MultipartFile[] images
+    ) {
         // Basic Info Table
         final ProductBasicInfo basicInfo = basicInfoMapper.map(basicInfoRequest);
         basicInfoRepo.save(basicInfo);
@@ -68,7 +91,7 @@ public class CreateProduct {
             try {
                 final ProductImage productImage = new ProductImage();
                 productImage.setImage(file.getBytes());
-                productImage.setProductId(product);
+                // productImage.setProductId(product);
                 imageRepo.save(productImage);
                 product.getImageList().add(productImage);
             } catch (IOException e) {

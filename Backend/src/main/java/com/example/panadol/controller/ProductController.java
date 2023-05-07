@@ -2,7 +2,8 @@ package com.example.panadol.controller;
 
 import com.example.panadol.dto.product.BasicInfoRequest;
 import com.example.panadol.dto.product.DescriptionRequest;
-import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.dto.product.EditableProductInfoResponse;
+import com.example.panadol.dto.product.SomeProductInfoResponse;
 import com.example.panadol.service.product.CreateProduct;
 import com.example.panadol.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/all")
-    public ResponseEntity<List<ProductAbstractionRequest>> getAllProducts(
+    public ResponseEntity<List<SomeProductInfoResponse>> getAllProducts(
             @RequestParam("offset") int offset,
             @RequestParam("limit") int limit
     ) {
@@ -48,34 +49,30 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getAllProducts(offset, limit));
     }
 
-    /*
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/{id}"
-    )
-    public ResponseEntity<ProductResponse> getSpecificProduct(@PathVariable Long id) {
+    @GetMapping(value = "/my-products")
+    public ResponseEntity<List<SomeProductInfoResponse>> getCurrentUserProducts() {
+        log.info("Getting All Products .. ");
+        return ResponseEntity.ok().body(productService.getCurrentUserProducts());
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<EditableProductInfoResponse> getSpecificProduct(@PathVariable Long id) {
         log.info("Getting Specific Product .. ");
         return ResponseEntity.ok().body(productService.getSpecificProduct(id));
     }
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/{productId}/owner/{email}"
-    )
-    public ResponseEntity<ProductAllInfo> isUserTheOwnerOfThisProduct(@PathVariable Long productId, @PathVariable String email) {
-        return new ResponseEntity<>(productService.productAllInfo(productId, email), HttpStatus.OK);
-    }
-
-    @RequestMapping(
-            method = RequestMethod.POST,
-            consumes = {"application/json"},
+    @PutMapping(
+            consumes = {"multipart/form-data", "application/json"},
             value = "/edit"
     )
-    public ResponseEntity<?> editProduct(@RequestBody ProductEdit productEdit) {
-        productService.editProduct(productEdit);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<?> editProduct(
+            @RequestPart("productId") Long productId,
+            @RequestPart("basicInfo") BasicInfoRequest basicInfoRequest,
+            @RequestPart("description") DescriptionRequest descriptionRequest,
+            @RequestPart("images") MultipartFile[] images) {
+        createProduct.editProduct(productId, basicInfoRequest, descriptionRequest, images);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
-    */
 }
 
 

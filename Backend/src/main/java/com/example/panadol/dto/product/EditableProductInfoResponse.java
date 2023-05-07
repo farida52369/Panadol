@@ -5,15 +5,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ProductAbstractionRequest {
-    private String productId;
-    private byte[] image;
-    private String title;
-    private String rate;
-    private String price;
-    private String inStock;
+public class EditableProductInfoResponse {
+    private BasicInfoRequest basicInfo;
+    private DescriptionRequest description;
+    private List<byte[]> images;
 }

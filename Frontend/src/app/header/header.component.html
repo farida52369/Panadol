@@ -28,6 +28,7 @@
           class="form-control"
           placeholder="Search"
           aria-describedby="search"
+          [value]="searchTerm"
           #search
           (change)="onSearchInput(search.value)"
         />
@@ -53,19 +54,35 @@
                 <a class="dropdown-item" href="/user/profile">Profile </a>
               </li>
               <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="/register/as/seller">
-                  Become A Seller
-                </a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li>
-                <a class="dropdown-item" href="/user/add-item">
-                  Offer Products
-                </a>
-              </li>
-              <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item a-link">Log Out</a></li>
+              <!-- Become A Seller if Not -->
+              <div *ngIf="!isSeller">
+                <li>
+                  <a class="dropdown-item" href="/register/as/seller">
+                    Become A Seller
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+              </div>
+              <!-- Offer Product If Seller -->
+              <div *ngIf="isSeller">
+                <li>
+                  <a class="dropdown-item" href="offer-product">
+                    Offer Product
+                  </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+              </div>
+              <!-- My Products If I'm a Seller -->
+              <div *ngIf="isSeller" (click)="myProductsService()">
+                <li>
+                  <a class="dropdown-item a-link"> My Products </a>
+                </li>
+                <li><hr class="dropdown-divider" /></li>
+              </div>
+              <!-- Bye bye, baby! -->
+              <div (click)="logOut()">
+                <li><a class="dropdown-item a-link">Log Out</a></li>
+              </div>
             </ul>
           </li>
         </div>

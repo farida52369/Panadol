@@ -1,11 +1,12 @@
 package com.example.panadol.mapper.product;
 
-import com.example.panadol.dto.product.ProductAbstractionRequest;
+import com.example.panadol.dto.product.SomeProductInfoResponse;
 import com.example.panadol.model.product.Product;
 import com.example.panadol.model.product.ProductImage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface ProductAbstractionMapper {
     @Mapping(target = "title", source = "basicInfo.title")
     @Mapping(target = "price", source = "basicInfo.price")
     @Mapping(target = "inStock", source = "basicInfo.inStock")
-    ProductAbstractionRequest map(Product product);
+    SomeProductInfoResponse map(Product product);
 
     @Named("longToString")
     default String longToString(Long value) {

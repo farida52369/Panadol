@@ -10,7 +10,6 @@ import { MatSidenavModule } from "@angular/material/sidenav";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { HomeComponent } from "./home/home.component";
 import { RegisterComponent } from "./auth/register/register.component";
-import { AddItemComponent } from "./add-item/add-item.component";
 import { CartComponent } from "./cart/cart.component";
 import { NgxWebstorageModule } from "ngx-webstorage";
 import { CheckoutComponent } from "./checkout/checkout.component";
@@ -26,6 +25,7 @@ import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { StarsRateComponent } from './stars-rate/stars-rate.component';
+import { OfferProductComponent } from './offer-product/offer-product.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +34,6 @@ import { StarsRateComponent } from './stars-rate/stars-rate.component';
     ProfileComponent,
     HomeComponent,
     AppComponent,
-    AddItemComponent,
     CartComponent,
     ProductComponent,
     CheckoutComponent,
@@ -43,7 +42,8 @@ import { StarsRateComponent } from './stars-rate/stars-rate.component';
     ContainerComponent,
     HeaderComponent,
     SideBarComponent,
-    StarsRateComponent
+    StarsRateComponent,
+    OfferProductComponent
   ],
   imports: [
     BrowserModule,

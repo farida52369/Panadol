@@ -1,18 +1,19 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { HttpClient } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 import {
   ProductAllInfo,
   ProductEdit,
   ProductResponse,
   ProductSpecificDetails,
-} from 'src/app/dto/data';
-import { environment } from 'src/environments/environment';
-import { LocalStorageService } from 'ngx-webstorage';
-import { Router } from '@angular/router';
-import { ProductRequestPayload } from 'src/app/home/product-request.payload';
+} from "src/app/dto/data";
+import { environment } from "src/environments/environment";
+import { LocalStorageService } from "ngx-webstorage";
+import { Router } from "@angular/router";
+import { ProductRequestPayload } from "src/app/home/product-request.payload";
+import { SomeProductInfoPayload } from "src/app/offer-product/offer-product-payload/some-product-info.payload";
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ProductService {
   constructor(
@@ -26,7 +27,7 @@ export class ProductService {
       `${environment.apiBaseUrl}/api/product/create`,
       product,
       {
-        observe: 'events',
+        observe: "events",
         reportProgress: true,
       }
     );
@@ -38,53 +39,50 @@ export class ProductService {
     );
   }
 
-  public getAllProducts(offset: number, limit: number): Observable<ProductRequestPayload[]> {
+  public getAllProducts(
+    offset: number,
+    limit: number
+  ): Observable<ProductRequestPayload[]> {
     return this.http.get<ProductRequestPayload[]>(
       `${environment.apiBaseUrl}/api/product/all?offset=${offset}&limit=${limit}`
     );
   }
 
+  public getCurrentUserProducts(): Observable<ProductRequestPayload[]> {
+    return this.http.get<ProductRequestPayload[]>(
+      `${environment.apiBaseUrl}/api/product/my-products`
+    );
+  }
+
   // Products All Info __ Local Storage
   storageAllInfoForProduct(info: ProductAllInfo) {
-    this.localStorage.store('product-all-Info', info);
+    this.localStorage.store("product-all-Info", info);
     if (this.getAllInfo()) {
-      this.router.navigateByUrl('/product');
+      this.router.navigateByUrl("/product");
     }
   }
 
   getAllInfo() {
     console.log(
-      this.localStorage.retrieve('product-all-Info') + 'ahhhhhhhhhhhhhhh'
+      this.localStorage.retrieve("product-all-Info") + "ahhhhhhhhhhhhhhh"
     );
-    return this.localStorage.retrieve('product-all-Info');
+    return this.localStorage.retrieve("product-all-Info");
   }
 
-  public productAllInfo(productId: number, email: string) {
-    return this.http.get<ProductAllInfo>(
-      `${environment.apiBaseUrl}/api/product/${productId}/owner/${email}`
-    );
-  }
-
-  public getProductsByCategory(category: string) {
-    return this.http.get<ProductSpecificDetails[]>(
-      `${environment.apiBaseUrl}/api/filter/${category}`
+  public getSpecificProduct(productId: number) {
+    return this.http.get<SomeProductInfoPayload>(
+      `${environment.apiBaseUrl}/api/product/${productId}`
     );
   }
 
-  public getProductsSorted(sort: string) {
-    return this.http.get<ProductSpecificDetails[]>(
-      `${environment.apiBaseUrl}/api/sort/${sort}`
-    );
-  }
-
-  public editProduct(product: ProductEdit) {
-    return this.http.post<void>(
+  public editProduct(product: FormData) {
+    return this.http.put<void>(
       `${environment.apiBaseUrl}/api/product/edit`,
       product,
       {
-        observe: 'events',
+        observe: "events",
         reportProgress: true,
       }
-    ); 
+    );
   }
 }

@@ -1,11 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ProductService } from "../services/product/product.service";
 import { CartService } from "../cart/cart.service";
-import { UserService } from "../services/user/user.service";
 import { ProductAllInfo } from "../dto/data";
 import { AuthService } from "../auth/service/auth.service";
 import { SearchService } from "./search.service";
 import { ProductRequestPayload } from "./product-request.payload";
+import { ActivatedRoute, Router } from "@angular/router";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -24,25 +24,42 @@ export class HomeComponent implements OnInit {
   @ViewChild("noProductFound") noProductEle: ElementRef | undefined;
   loggin!: boolean;
   isManager!: Boolean;
-  searchBy!: string;
-  ownedProducts: boolean = false;
-  purchasedProducts: boolean = false;
   // Paging and See More
   offset: number = 0;
   limit: number = 20;
-  showMore: boolean = true;
+  showMore!: boolean;
+  // MyPersonalProducts
+  myPersonalProducts!: boolean;
 
   constructor(
     private authService: AuthService,
     private productService: ProductService,
     private searchService: SearchService,
     private cartService: CartService,
-    private userService: UserService
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.loggin = this.authService.isLoggedIn();
-    this.showProducts();
+    this.route.queryParams.subscribe((params) => {
+      this.myPersonalProducts = params["myProducts"] === "true";
+      this.searchTerm = params["searchTerm"] ?? "";
+      this.priceFilter = params["priceFilter"] ?? "";
+      this.reviewFilter = params["reviewFilter"] ?? "";
+      this.categoryFilter = params["categoryFilter"] ?? "";
+    });
+
+    if (this.myPersonalProducts) {
+      this.showCurrentUserProducts();
+    } else if (!this.allEmpty()) {
+      this.getProductsBySearch();
+    } else {
+      this.showProducts();
+      this.showMore = true;
+    }
+
+    // Clean after you, please ...
     this.authService.clearSessionStorage();
 
     // Init subscribers
@@ -53,25 +70,25 @@ export class HomeComponent implements OnInit {
     this.searchService.searchTerm$.subscribe((term) => {
       this.searchTerm = term;
       this.getProductsBySearch();
-      console.info(`Hello Search Term: ${term}`);
+      // console.info(`Hello Search Term: ${term}`);
     });
 
     this.searchService.categoryFilter$.subscribe((term) => {
       this.categoryFilter = term;
       this.getProductsBySearch();
-      console.info(`Hello Category Filter: ${term}`);
+      // console.info(`Hello Category Filter: ${term}`);
     });
 
     this.searchService.priceFilter$.subscribe((term) => {
       this.priceFilter = term;
       this.getProductsBySearch();
-      console.info(`Hello Price Filter: ${term}`);
+      // console.info(`Hello Price Filter: ${term}`);
     });
 
     this.searchService.reviewFilter$.subscribe((term) => {
       this.reviewFilter = term;
       this.getProductsBySearch();
-      console.info(`Hello Review Filter: ${term}`);
+      // console.info(`Hello Review Filter: ${term}`);
     });
   }
 
@@ -105,7 +122,9 @@ export class HomeComponent implements OnInit {
   }
 
   handleRate(from: number, to: number): void {
+    // console.log(`From: ${from}, To: ${to}`);
     for (let i = from; i < to; i++) {
+      // console.log(`Image #${i}: ${this.productsToBeViewed[i].image.toString()}`)
       const num = this.roundToHalf(this.productsToBeViewed[i].rate);
       const fullStars = Math.floor(num);
       const hasHalfStar = num % 1 !== 0;
@@ -133,30 +152,45 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  showCurrentUserProducts() {
+    this.productService.getCurrentUserProducts().subscribe({
+      next: (res) => {
+        if (res.length == 0) {
+          console.log("No More Products ...");
+        } else {
+          this.productsToBeViewed = res;
+          this.handleRate(0, res.length);
+        }
+      },
+    });
+  }
+
   showProducts() {
-    // this.setting();
-    // this.setNoProductToNull();
     this.productService
       .getAllProducts(this.offset, this.limit)
       .subscribe((res) => {
-        const from = this.offset * this.limit;
-        const to = this.offset * this.limit + res.length;
         if (res.length === 0) {
           this.showMore = false;
           console.log("No More Products ...");
-          // this.setNoProductDetails();
         } else {
+          const from = this.offset * this.limit;
+          const to = this.offset * this.limit + res.length;
           this.productsToBeViewed = [...this.productsToBeViewed, ...res];
           this.handleRate(from, to);
           this.offset += 1;
           console.log(`Products from ${from} to ${to} => ${res}`);
-          // this.setNoProductToNull();
         }
       });
   }
 
+  editProduct(productId: any) {
+    this.router.navigate(["offer-product"], {
+      queryParams: { isEdit: true, productId: productId },
+    });
+  }
+
   viewProduct(id: any) {
-    this.setting();
+    /*
     let productAllInfoToView: ProductAllInfo;
     this.productService
       .productAllInfo(id, this.authService.getUserEmail())
@@ -165,10 +199,10 @@ export class HomeComponent implements OnInit {
         console.log(productAllInfoToView);
         this.productService.storageAllInfoForProduct(productAllInfoToView);
       });
+      */
   }
 
   addToCart(productIndex: number) {
-    this.setting();
     this.productToCart = this.productsToBeViewed[productIndex];
     this.productToCart.quantity = 1;
     this.productToCart.totalPrice =
@@ -181,64 +215,5 @@ export class HomeComponent implements OnInit {
       ele.style.color = "red";
       ele.style.paddingLeft = "50%";
     }
-  }
-
-  private setNoProductToNull() {
-    if (this.noProductEle)
-      this.noProductEle.nativeElement.style.display = "none";
-  }
-
-  private setNoProductDetails() {
-    console.log("Marry Christmas :)");
-    if (this.noProductEle) {
-      this.noProductEle.nativeElement.style.display = "block";
-      this.noProductEle.nativeElement.style.fontSize = "22px";
-    }
-  }
-
-  getManagerOwnerProducts() {
-    this.setting();
-    this.ownedProducts = true;
-    this.userService
-      .getManagerOwnedProducts(this.authService.getUserEmail())
-      .subscribe((res) => {
-        const productsDiv = document.getElementById("products");
-        if (productsDiv) productsDiv.innerHTML = "";
-        if (res.length === 0) {
-          // this.details = [];
-          this.setNoProductDetails();
-        } else {
-          // this.details = res;
-          this.setNoProductToNull();
-        }
-      });
-  }
-
-  getCustomerPurchasedProducts() {
-    this.setting();
-    this.purchasedProducts = true;
-    this.userService
-      .getCustomerPurchasedProducts(this.authService.getUserEmail())
-      .subscribe((res) => {
-        const productsDiv = document.getElementById("products");
-        if (productsDiv) productsDiv.innerHTML = "";
-        if (res.length === 0) {
-          // this.details = [];
-          this.setNoProductDetails();
-        } else {
-          // this.details = res;
-          this.setNoProductToNull();
-        }
-      });
-  }
-
-  setting() {
-    this.ownedProducts = false;
-    this.purchasedProducts = false;
-  }
-
-  logOut() {
-    this.cartService.clearCart();
-    this.authService.logout();
   }
 }
