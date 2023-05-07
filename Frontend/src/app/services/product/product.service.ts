@@ -1,12 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import {
-  ProductAllInfo,
-  ProductEdit,
-  ProductResponse,
-  ProductSpecificDetails,
-} from "src/app/dto/data";
 import { environment } from "src/environments/environment";
 import { LocalStorageService } from "ngx-webstorage";
 import { Router } from "@angular/router";
@@ -33,8 +27,8 @@ export class ProductService {
     );
   }
 
-  public getProduct(id: number): Observable<ProductResponse> {
-    return this.http.get<ProductResponse>(
+  public getProduct(id: number): Observable<any> {
+    return this.http.get<any>(
       `${environment.apiBaseUrl}/api/product/${id}`
     );
   }
@@ -55,7 +49,7 @@ export class ProductService {
   }
 
   // Products All Info __ Local Storage
-  storageAllInfoForProduct(info: ProductAllInfo) {
+  storageAllInfoForProduct(info: any) {
     this.localStorage.store("product-all-Info", info);
     if (this.getAllInfo()) {
       this.router.navigateByUrl("/product");

@@ -1,62 +1,57 @@
-import { Injectable } from '@angular/core';
-import { Cart, CheckoutProductInfo } from '../dto/data';
-import { LocalStorageService } from 'ngx-webstorage';
+import { Injectable } from "@angular/core";
+import { SessionStorageService } from "ngx-webstorage";
+import { CartRequestPayload } from "./cart-request.payload";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class CartService {
-  constructor(private localStorage: LocalStorageService) {}
+  constructor(private sessionStorage: SessionStorageService) {}
 
-  values: Array<Cart> = [];
-  after_removed: Array<Cart> = [];
+  private cartProducts: Array<CartRequestPayload> = [];
 
-  storageCart(product: Cart) {
-    this.values = JSON.parse(this.getCart());
+  public storageCart(product: CartRequestPayload) {
+    this.cartProducts = this.getCart();
 
-    if (this.values == null) this.values = [];
-    const find_prod = this.values.find((res) => {
-      if (res.quantity !== product.quantity && res.productId === product.productId) {
-        res.quantity = product.quantity;
-        res.totalPrice = res.quantity * res.price;
+    const productExists = this.cartProducts.find(
+      (res) => res.productId === product.productId
+    );
+
+    if (!productExists) {
+      this.cartProducts.push(product);
+    } else {
+      if (productExists.quantity !== product.quantity) {
+        productExists.quantity = product.quantity;
       }
-      return res.title === product.title;
-    });
-
-    if (!find_prod) {
-      this.values.push(product);
     }
-    this.localStorage.store('cart', JSON.stringify(this.values));
+    this.storeCart();
   }
 
-  clearCart() {
-    this.localStorage.clear('cart');
-  }
-
-  removeProduct(removed_product: any) {
-    this.after_removed = JSON.parse(this.getCart());
-    const index = this.after_removed.findIndex((object) => {
-      return object.title === removed_product.title;
-    });
+  removeProduct(removedProduct: CartRequestPayload) {
+    this.cartProducts = this.getCart();
+    const index = this.cartProducts.findIndex(
+      (object) => object.productId === removedProduct.productId
+    );
     if (index !== -1) {
-      this.after_removed.splice(index, 1);
+      this.cartProducts.splice(index, 1);
+      this.storeCart();
     }
-    this.localStorage.store('cart', JSON.stringify(this.after_removed));
   }
 
-  getCart() {
-    return this.localStorage.retrieve('cart');
+  private storeCart() {
+    this.sessionStorage.store(
+      "cart-products",
+      JSON.stringify(this.cartProducts)
+    );
   }
 
-  getCheckoutProducts(): Array<CheckoutProductInfo> {
-    let res: Array<CheckoutProductInfo> = [];
-    this.values = JSON.parse(this.getCart());
-    this.values.forEach((ele) => {
-      res.push({
-        productId: ele.productId,
-        quantity: ele.quantity,
-      });
-    });
-    return res;
+  public getCart() {
+    return JSON.parse(this.sessionStorage.retrieve("cart-products")) ?? [];
   }
+
+  public clearCart() {
+    this.sessionStorage.clear("cart-products");
+  }
+
+  getCheckoutProducts(): any {}
 }

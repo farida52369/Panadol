@@ -1,7 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ProductService } from "../services/product/product.service";
-import { CartService } from "../cart/cart.service";
-import { ProductAllInfo } from "../dto/data";
 import { AuthService } from "../auth/service/auth.service";
 import { SearchService } from "./search.service";
 import { ProductRequestPayload } from "./product-request.payload";
@@ -35,7 +33,6 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private productService: ProductService,
     private searchService: SearchService,
-    private cartService: CartService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -200,20 +197,5 @@ export class HomeComponent implements OnInit {
         this.productService.storageAllInfoForProduct(productAllInfoToView);
       });
       */
-  }
-
-  addToCart(productIndex: number) {
-    this.productToCart = this.productsToBeViewed[productIndex];
-    this.productToCart.quantity = 1;
-    this.productToCart.totalPrice =
-      this.productToCart.quantity * this.productToCart.price;
-
-    this.cartService.storageCart(this.productToCart);
-    let ele = document.getElementById("to-cart");
-    if (ele) {
-      ele.style.display = "block";
-      ele.style.color = "red";
-      ele.style.paddingLeft = "50%";
-    }
   }
 }
