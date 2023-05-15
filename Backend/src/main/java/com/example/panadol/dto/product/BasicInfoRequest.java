@@ -24,4 +24,6 @@ public class BasicInfoRequest {
     private Integer inStock;
     @NotBlank
     private String category;
+    @NotBlank
+    private Double rate;
 }

@@ -22,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SearchService {
 
+    public static final String BASIC_INFO = "basicInfo";
     private final ProductAbstractionMapper abstractionMapper;
     @PersistenceContext
     private final EntityManager entityManager;
@@ -45,12 +46,12 @@ public class SearchService {
 
             // Expression<List<String>> keyFeatures = root.get("description").get("keyFeatures");
             Predicate searchPredicate = builder.or(
-                    builder.like(builder.lower(root.get("basicInfo").get("category")), "%" + searchBy + "%"),
-                    builder.like(builder.lower(root.get("basicInfo").get("title")), "%" + searchBy + "%"),
+                    builder.like(builder.lower(root.get(BASIC_INFO).get("category")), "%" + searchBy + "%"),
+                    builder.like(builder.lower(root.get(BASIC_INFO).get("title")), "%" + searchBy + "%"),
                     builder.like(builder.lower(root.get("description").get("description")), "%" + searchBy + "%"),
-                    builder.like(root.get("basicInfo").get("price").as(String.class), "%" + searchBy + "%"),
-                    builder.like(root.get("basicInfo").get("inStock").as(String.class), "%" + searchBy + "%"),
-                    builder.like(root.get("basicInfo").get("rate").as(String.class), "%" + searchBy + "%")
+                    builder.like(root.get(BASIC_INFO).get("price").as(String.class), "%" + searchBy + "%"),
+                    builder.like(root.get(BASIC_INFO).get("inStock").as(String.class), "%" + searchBy + "%"),
+                    builder.like(root.get(BASIC_INFO).get("rate").as(String.class), "%" + searchBy + "%")
             );
             finalPredicates.add(searchPredicate);
             // log.info("After Search Term");
@@ -58,13 +59,13 @@ public class SearchService {
 
         // filter by category
         if (filterByCategory != null && !filterByCategory.isEmpty()) {
-            Predicate filterByCategoryPredicate = builder.equal(root.get("basicInfo").get("category"), filterByCategory);
+            Predicate filterByCategoryPredicate = builder.equal(root.get(BASIC_INFO).get("category"), filterByCategory);
             finalPredicates.add(filterByCategoryPredicate);
             // log.info("After Filter By Category");
         }
 
         // filter by rate
-        Predicate filterByRatePredicate = builder.greaterThanOrEqualTo(root.get("basicInfo").get("rate"), getRate(filterByRate));
+        Predicate filterByRatePredicate = builder.greaterThanOrEqualTo(root.get(BASIC_INFO).get("rate"), getRate(filterByRate));
         log.info("After Filter By Rate");
 
         Predicate finalPredicate;
@@ -84,10 +85,10 @@ public class SearchService {
         // filter by price
         switch (filterByPrice) {
             case "Descending":
-                criteriaQuery.orderBy(builder.desc(root.get("basicInfo").get("price")));
+                criteriaQuery.orderBy(builder.desc(root.get(BASIC_INFO).get("price")));
                 break;
             case "Ascending":
-                criteriaQuery.orderBy(builder.asc(root.get("basicInfo").get("price")));
+                criteriaQuery.orderBy(builder.asc(root.get(BASIC_INFO).get("price")));
                 break;
         }
 

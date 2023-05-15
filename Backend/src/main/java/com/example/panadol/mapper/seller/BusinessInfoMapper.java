@@ -4,8 +4,10 @@ import com.example.panadol.dto.auth.seller.BusinessInfoRequest;
 import com.example.panadol.model.auth.seller.BusinessInfo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring") // Works as Bean
+@Component
 public interface BusinessInfoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "country", source = "country")

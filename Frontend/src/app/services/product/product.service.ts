@@ -4,8 +4,8 @@ import { Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { LocalStorageService } from "ngx-webstorage";
 import { Router } from "@angular/router";
-import { ProductRequestPayload } from "src/app/home/product-request.payload";
-import { SomeProductInfoPayload } from "src/app/offer-product/offer-product-payload/some-product-info.payload";
+import { ProductRequestHomePayload } from "src/app/home/product-request-home.payload";
+import { SpecificProductInfoPayload } from "src/app/offer-product/offer-product-payload/specific-product-info.payload";
 @Injectable({
   providedIn: "root",
 })
@@ -36,14 +36,14 @@ export class ProductService {
   public getAllProducts(
     offset: number,
     limit: number
-  ): Observable<ProductRequestPayload[]> {
-    return this.http.get<ProductRequestPayload[]>(
+  ): Observable<ProductRequestHomePayload[]> {
+    return this.http.get<ProductRequestHomePayload[]>(
       `${environment.apiBaseUrl}/api/product/all?offset=${offset}&limit=${limit}`
     );
   }
 
-  public getCurrentUserProducts(): Observable<ProductRequestPayload[]> {
-    return this.http.get<ProductRequestPayload[]>(
+  public getCurrentUserProducts(): Observable<ProductRequestHomePayload[]> {
+    return this.http.get<ProductRequestHomePayload[]>(
       `${environment.apiBaseUrl}/api/product/my-products`
     );
   }
@@ -64,7 +64,7 @@ export class ProductService {
   }
 
   public getSpecificProduct(productId: number) {
-    return this.http.get<SomeProductInfoPayload>(
+    return this.http.get<SpecificProductInfoPayload>(
       `${environment.apiBaseUrl}/api/product/${productId}`
     );
   }

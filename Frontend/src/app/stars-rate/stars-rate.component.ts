@@ -5,12 +5,16 @@ import { Component, Input } from "@angular/core";
   template: `
     <mat-icon class="mat-icon-star" *ngFor="let i of star">star</mat-icon>
     <mat-icon class="mat-icon-star" *ngFor="let i of start_half">star_half</mat-icon>
-    <mat-icon class="mat-icon-star" *ngFor="let i of start_border">
+    <mat-icon class="dark" *ngFor="let i of start_border">
       star_border
     </mat-icon>
   `,
   styles: [
     `
+      .dark {
+        color: #555;;
+      }
+
       .mat-icon-star {
         color: rgb(255, 153, 0);
       }

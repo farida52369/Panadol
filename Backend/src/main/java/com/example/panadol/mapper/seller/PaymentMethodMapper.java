@@ -4,8 +4,10 @@ import com.example.panadol.dto.auth.seller.PaymentMethodRequest;
 import com.example.panadol.model.auth.seller.PaymentMethod;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
+@Component
 public interface PaymentMethodMapper {
     @Mapping(target = "cardNumber", source = "cardNumber")
     @Mapping(target = "expiryMonth", source = "expiryMonth")

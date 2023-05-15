@@ -33,6 +33,6 @@ public class Product {
     private Date createdDate;
 
     public Product() {
-        this.imageList = new ArrayList<>(6);
+        this.imageList = new ArrayList<>(4);
     }
 }

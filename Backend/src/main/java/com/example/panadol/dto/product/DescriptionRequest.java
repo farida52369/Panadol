@@ -15,6 +15,8 @@ import java.util.List;
 @ToString
 public class DescriptionRequest {
     @NotBlank
+    private String shortDescription;
+    @NotBlank
     private String description;
     @Size(min = 1)
     private List<String> keyFeatures;

@@ -1,6 +1,7 @@
 export interface BasicInfoPayload {
   title: string;
   price: string;
-  inStock: string;
+  inStock: number;
   category: string;
+  rate: number
 }

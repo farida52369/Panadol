@@ -33,11 +33,13 @@
               </p>
               <div class="rate-info">
                 <span class="rate-percentage">{{ item.rate }}</span>
-                <app-stars-rate
-                  [star]="item.star"
-                  [start_border]="item.star_border"
-                  [start_half]="item.star_half"
+                <div *ngIf="item?.starTypes">
+                  <app-stars-rate
+                  [star]="item.starTypes.star"
+                  [start_border]="item.starTypes.star_border"
+                  [start_half]="item.starTypes.star_half"
                 ></app-stars-rate>
+                </div>
               </div>
               <div class="stock">
                 <span class="stock-info" *ngIf="item.inStock != 0">

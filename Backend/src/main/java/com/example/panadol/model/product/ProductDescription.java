@@ -16,6 +16,8 @@ public class ProductDescription {
     @Column(name = "descriptionId")
     private Long descriptionId;
     @Lob
+    private String shortDescription;
+    @Lob
     private String description;
     @ElementCollection
     @CollectionTable(name = "product_features", joinColumns = @JoinColumn(name = "product_id"))

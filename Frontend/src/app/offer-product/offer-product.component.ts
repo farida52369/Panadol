@@ -5,12 +5,12 @@ import { ProductService } from "../services/product/product.service";
 import { BasicInfoPayload } from "./offer-product-payload/basic-info.payload";
 import { DescriptionPayload } from "./offer-product-payload/description.payload";
 import { ImagesPayload } from "./offer-product-payload/images.payload";
-import { SomeProductInfoPayload } from "./offer-product-payload/some-product-info.payload";
+import { SpecificProductInfoPayload } from "./offer-product-payload/specific-product-info.payload";
 
 @Component({
-  selector: 'app-offer-product',
-  templateUrl: './offer-product.component.html',
-  styleUrls: ['./offer-product.component.css']
+  selector: "app-offer-product",
+  templateUrl: "./offer-product.component.html",
+  styleUrls: ["./offer-product.component.css"],
 })
 export class OfferProductComponent implements OnInit {
   // Forms Needed
@@ -28,7 +28,7 @@ export class OfferProductComponent implements OnInit {
   // Edit Or Not
   isEdit!: boolean;
   productId!: number;
-  product!: SomeProductInfoPayload;
+  product!: SpecificProductInfoPayload;
   // Template Image
   uploadedImage: string = "/assets/upload.svg";
 
@@ -76,6 +76,7 @@ export class OfferProductComponent implements OnInit {
     });
 
     this.descriptionForm = new FormGroup({
+      shortDescription: new FormControl("", [Validators.required]),
       description: new FormControl("", [Validators.required]),
       keyFeatures: new FormArray([]),
     });
@@ -106,6 +107,7 @@ export class OfferProductComponent implements OnInit {
     }
 
     this.descriptionForm.setValue({
+      shortDescription: this.product.description.shortDescription,
       description: this.product.description.description,
       keyFeatures: this.product.description.keyFeatures,
     });
@@ -196,6 +198,7 @@ export class OfferProductComponent implements OnInit {
         price: this.basicInfoForm.get("price")?.value,
         inStock: this.basicInfoForm.get("inStock")?.value,
         category: this.basicInfoForm.get("category")?.value,
+        rate: 0
       };
 
       this.formParams.append(
@@ -218,6 +221,7 @@ export class OfferProductComponent implements OnInit {
       }
 
       const descriptionPayload: DescriptionPayload = {
+        shortDescription: this.descriptionForm.get("shortDescription")?.value,
         description: this.descriptionForm.get("description")?.value,
         keyFeatures: keyFeaturesRes,
       };
