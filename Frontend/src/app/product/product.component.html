@@ -1,82 +1,257 @@
-<div class="all-page">
-  <div class="container">
-    <div>
-      <h1 class="header">Product Info</h1>
+<app-header></app-header>
+<div class="container mt-5 pb-5">
+  <div class="card">
+    <div class="row g-0 product-content">
+      <div class="col-md-6">
+        <div class="d-flex flex-column justify-content-center">
+          <div *ngIf="currentProduct?.images">
+            <div class="main_image">
+              <img
+                src="data:image/jpeg;base64,{{ main_image }}"
+                id="main_product_image"
+                width="580"
+                alt="Product Image"
+              />
+            </div>
+            <div class="thumbnail_images">
+              <ul id="thumbnail">
+                <li *ngFor="let image of currentProduct.images; index as i">
+                  <img
+                    (click)="changeImage(image)"
+                    src="data:image/jpeg;base64,{{ image }}"
+                    alt="Product #{{ i }}"
+                  />
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="p-3 right-side product-right-side">
+          <div *ngIf="currentProduct?.basicInfo">
+            <div class="d-flex justify-content-between align-items-center">
+              <h4>{{ currentProduct.basicInfo.title }}</h4>
+            </div>
+            <div class="ratings d-flex flex-row align-items-center">
+              <div *ngIf="currentProductRate">
+                <app-stars-rate
+                  [star]="currentProductRate.star"
+                  [start_border]="currentProductRate.star_border"
+                  [start_half]="currentProductRate.star_half"
+                ></app-stars-rate>
+              </div>
+              <a class="total-review a-link">
+                ({{ numOfReviews }}) Review
+              </a>
+            </div>
+            <p class="price">${{ currentProduct.basicInfo.price }}</p>
+          </div>
+
+          <div *ngIf="currentProduct?.description">
+            <div class="mt-2 pr-3 short-description">
+              <p>
+                {{ currentProduct.description.shortDescription }}
+              </p>
+            </div>
+          </div>
+
+          <div class="buttons d-flex flex-row mt-4 gap-3">
+            <div *ngIf="currentProduct?.basicInfo?.inStock">
+              <div class="quantity">
+                <h6>Quantity:</h6>
+                <app-quantity
+                  [quantity]="currentProduct.basicInfo.inStock >= 1 ? 1 : 0"
+                  [maxQuantity]="currentProduct.basicInfo.inStock"
+                ></app-quantity>
+              </div>
+            </div>
+            <div class="add-to-cart">
+              <a class="btn a-link">Add to cart</a>
+            </div>
+          </div>
+          <div *ngIf="currentProduct?.basicInfo">
+            <div class="mt-4">
+              <p class="cat">
+                Category:<a class="a-link">
+                  {{ currentProduct.basicInfo.category }}
+                </a>
+              </p>
+              <p class="availability">
+                Availability: {{ currentProduct.basicInfo.inStock }} Products In
+                Stock
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="card">
-      <div class="container-fliud">
-        <div class="wrapper row">
-          <div class="preview col-md-6">
-            <div class="preview-pic tab-content">
-              <div class="tab-pane active" id="pic-1"><img src="data:image/jpeg;base64,{{product.image}}" /></div>
-            </div>
-            <br>
-          </div>
-          <div class="preview col-md-6">
-            <div class="rating">
-              <!-- 
-                <div class="stars">
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star checked"></span>
-                  <span class="fa fa-star"></span>
-                  <span class="fa fa-star"></span>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="product-info">
+        <div class="nav-main">
+          <!-- Tab Nav -->
+          <ul class="nav nav-tabs" id="nav-tab" role="tablist">
+            <li class="nav-item">
+              <a
+                class="nav-link active"
+                data-bs-toggle="tab"
+                data-bs-target="#description"
+                role="tab"
+              >
+                Description
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                data-bs-toggle="tab"
+                data-bs-target="#reviews"
+                role="tab"
+              >
+                Reviews
+              </a>
+            </li>
+          </ul>
+          <!--/ End Tab Nav -->
+        </div>
+
+        <div class="tab-content" id="nav-tabContent">
+          <!-- Description Tab -->
+          <div
+            class="tab-pane fade show active"
+            id="description"
+            role="tabpanel"
+          >
+            <div class="tab-single">
+              <div class="row">
+                <div class="col-12">
+                  <div *ngIf="currentProduct?.description?.description">
+                    <div class="single-des">
+                      <p>
+                        {{ currentProduct.description.description }}
+                      </p>
+                    </div>
+                  </div>
+                  <div class="single-des">
+                    <h4>Product Key Features:</h4>
+                    <ul *ngIf="currentProduct?.description?.keyFeatures">
+                      <li
+                        *ngFor="
+                          let key of currentProduct.description.keyFeatures
+                        "
+                      >
+                        {{ key }}
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <span class="review-no">41 reviews</span> 
-              -->
-              <br>
-              <br>
-              <span class="seller">
-                <b>Owner: {{ product.owner }}</b>
-              </span>
-              <br>
-              <br>
-            </div>
-  
-            <span class="product-title">
-              <span *ngIf="isOwner" (click)="editTitle()" class="fa fa-edit" style="font-size:28px;"> </span>
-              <span *ngIf="noTitleEdit" id="title"><span class="color"><b>Title: </b></span> {{product.title}}</span>
-              <input *ngIf="!noTitleEdit" id="title_after_edit" value={{product.title}} />
-              <button *ngIf="!noTitleEdit" (click)="exitEditTitle()">Ok </button>
-            </span>
-            <span class="price">
-              <span *ngIf="isOwner" (click)="editPrice()" class="fa fa-edit" style="font-size:28px;"></span>
-              <span *ngIf="noPriceEditing" id="price"><span class="color"><b>Price: </b></span> {{product.price}}$</span>
-              <input *ngIf="!noPriceEditing" id="price_after_edit" value={{product.price}} />
-              <button *ngIf="!noPriceEditing" (click)="exitEditPrice()">Ok </button>
-            </span>
-            <span class="quantity">
-              <span *ngIf="isOwner" (click)="editInStock()" class="fa fa-edit" style="font-size:28px;"> </span>
-              <span *ngIf="noInStockEditing" id="inStock"><span class="color"><b>Quantity: </b></span> {{product.inStock}}</span>
-              <input *ngIf="!noInStockEditing" id="inStock_after_edit" value={{product.inStock}} />
-              <button *ngIf="!noInStockEditing" (click)="exitEditInStock()">Ok </button>
-            </span>
-            <span class="category">
-              <span *ngIf="isOwner" (click)="editCategory()" class="fa fa-edit" style="font-size:28px;"> </span>
-              <span *ngIf="noCategoryEdit" id="cat"><span class="color"><b>Category: </b></span> {{product.category}}</span>
-              <input *ngIf="!noCategoryEdit" id="cat_after_edit" value={{product.category}} />
-              <button *ngIf="!noCategoryEdit" (click)="exitEditCategory()">Ok </button>
-            </span>
-            <span class="product-description">
-              <span *ngIf="isOwner" (click)="editDescription()" class="fa fa-edit" style="font-size:28px;"> </span>
-              <span *ngIf="noDescriptionEditing" id="desc">
-                <span class="color"><b>About The Product: </b></span>
-                {{product.description}}
-              </span>
-              <input *ngIf="!noDescriptionEditing" id="desc_after_edit" value={{product.description}} />
-              <button *ngIf="!noDescriptionEditing" type="button" (click)="exitEditDescription()">Ok </button>
-            </span>
-            <div class="action">
-              
-              <button class="add-to-cart btn btn-default" type="button" (click)="addToCart()">Add To Cart</button>
-              <!-- <button class="like btn btn-default" type="button"><span class="fa fa-heart"></span></button> -->
-              <button class="add-to-cart btn btn-default" type="button" (click)="backHome()">Continue Shopping</button>
-              <br>
-              <span id="to-cart">
-                <i class="fa fa-exclamation" style="font-style: italic;"></i>Added to cart successfully
-              </span>
+              </div>
             </div>
           </div>
+          <!--/ End Description Tab -->
+
+          <!-- Reviews Tab -->
+          <div class="tab-pane fade" id="reviews" role="tabpanel">
+            <div class="tab-single review-panel">
+              <div class="row">
+                <div class="col-12">
+                  <div class="ratting-main">
+                    <div *ngIf="currentProduct?.basicInfo">
+                      <div class="avg-ratting">
+                        <h4>
+                          {{ currentProduct.basicInfo.rate }}
+                          <span>(Overall)</span>
+                        </h4>
+                        <span>Based on {{ numOfComments }} Comments</span>
+                      </div>
+                    </div>
+
+                    <!-- Single Rating -->
+                    <div class="single-rating" *ngFor="let comment of comments">
+                      <div class="rating-author">
+                        <img src="assets/images/comments2.jpg" alt="#" />
+                      </div>
+                      <div class="rating-des">
+                        <h6>{{ comment.name }}</h6>
+                        <div class="ratings d-flex flex-row">
+                          <ul class="rating">
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                            <li><i class="fa fa-star"></i></li>
+                          </ul>
+                          <div class="rate-count">
+                            (<span>{{ comment.rate }}</span
+                            >)
+                          </div>
+                        </div>
+                        <p>
+                          {{ comment.comment }}
+                        </p>
+                      </div>
+                    </div>
+                    <!--/ End Single Rating -->
+                  </div>
+
+                  <!-- Comment -->
+                  <form class="form-card" [formGroup]="commentForm">
+                    <h3>Add A Review</h3>
+                    <p>
+                      Your email address will not be published. Required fields
+                      are marked *
+                    </p>
+                    <div class="comment-review">
+                      <div class="add-review">
+                        <h4>Your Rating *</h4>
+                        <div class="ratings">
+                          <mat-icon
+                            *ngFor="let i of [1, 2, 3, 4, 5]"
+                            (click)="setRating(i)"
+                            class="mat-icon-star"
+                            [ngClass]="rating >= i ? 'filled' : 'border-star'"
+                          >
+                            {{ rating >= i ? "star" : "star_border" }}
+                          </mat-icon>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <label
+                        for="description-comment"
+                        class="form-label write-review"
+                      >
+                        <h4>Write a review *</h4>
+                      </label>
+                    </div>
+                    <div class="row mb-4">
+                      <textarea
+                        class="form-control"
+                        id="description-comment"
+                        formControlName="comment"
+                        rows="4"
+                        placeholder="Write your review hereeee .."
+                      ></textarea>
+                    </div>
+                    <div class="align-center">
+                      <button
+                        class="btn btn-primary"
+                        
+                      >
+                        Share Comment
+                      </button>
+                    </div>
+                  </form>
+                  <!--/ End Form Comments -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--/ End Reviews Tab -->
         </div>
       </div>
     </div>

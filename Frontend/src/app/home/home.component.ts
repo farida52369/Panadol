@@ -2,8 +2,10 @@ import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { ProductService } from "../services/product/product.service";
 import { AuthService } from "../auth/service/auth.service";
 import { SearchService } from "./search.service";
-import { ProductRequestPayload } from "./product-request.payload";
+import { ProductRequestHomePayload } from "./product-request-home.payload";
 import { ActivatedRoute, Router } from "@angular/router";
+import { RateHandle } from "../common/rate-handle";
+import { StarTypesPayload } from "../stars-rate/star-types.payload";
 @Component({
   selector: "app-home",
   templateUrl: "./home.component.html",
@@ -16,7 +18,7 @@ export class HomeComponent implements OnInit {
   priceFilter!: string;
   reviewFilter!: string;
   // Products
-  productsToBeViewed: Array<ProductRequestPayload> = [];
+  productsToBeViewed: Array<ProductRequestHomePayload> = [];
 
   productToCart: any;
   @ViewChild("noProductFound") noProductEle: ElementRef | undefined;
@@ -121,31 +123,8 @@ export class HomeComponent implements OnInit {
   handleRate(from: number, to: number): void {
     // console.log(`From: ${from}, To: ${to}`);
     for (let i = from; i < to; i++) {
-      // console.log(`Image #${i}: ${this.productsToBeViewed[i].image.toString()}`)
-      const num = this.roundToHalf(this.productsToBeViewed[i].rate);
-      const fullStars = Math.floor(num);
-      const hasHalfStar = num % 1 !== 0;
-      const halfStar = hasHalfStar ? [1] : [];
-      const fullStarList = Array(fullStars)
-        .fill(1)
-        .map((_, i) => i + 1);
-      const borderStar = Array(5 - fullStars - halfStar.length)
-        .fill(1)
-        .map((_, i) => i + 1);
-      this.productsToBeViewed[i].star = fullStarList;
-      this.productsToBeViewed[i].star_border = borderStar;
-      this.productsToBeViewed[i].star_half = halfStar;
-    }
-  }
-
-  roundToHalf(num: number): number {
-    const decimal = num - Math.floor(num);
-    if (decimal < 0.25) {
-      return Math.floor(num) + 0.0;
-    } else if (decimal >= 0.25 && decimal < 0.75) {
-      return Math.floor(num) + 0.5;
-    } else {
-      return Math.ceil(num);
+      const stars: StarTypesPayload = RateHandle.getSuitableRate(this.productsToBeViewed[i].rate);
+      this.productsToBeViewed[i].starTypes =stars
     }
   }
 
@@ -187,6 +166,8 @@ export class HomeComponent implements OnInit {
   }
 
   viewProduct(id: any) {
+    console.log(`Product Id: ${id}`)
+    this.router.navigate(["view-product"], { queryParams: { productId: id } });
     /*
     let productAllInfoToView: ProductAllInfo;
     this.productService

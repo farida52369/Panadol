@@ -1,8 +1,7 @@
 package com.example.panadol.service.product;
 
-import com.example.panadol.dto.product.BasicInfoRequest;
-import com.example.panadol.dto.product.EditableProductInfoResponse;
 import com.example.panadol.dto.product.DescriptionRequest;
+import com.example.panadol.dto.product.EditableProductInfoResponse;
 import com.example.panadol.dto.product.SomeProductInfoResponse;
 import com.example.panadol.mapper.product.ProductAbstractionMapper;
 import com.example.panadol.mapper.product.ProductBasicInfoToRequestMapper;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -65,7 +63,11 @@ public class ProductService {
         List<String> keyFeatures = product.getDescription().getKeyFeatures();
         // log.info("{}", keyFeatures.get(0));
         productInfoResponse.setDescription(
-                new DescriptionRequest(product.getDescription().getDescription(), keyFeatures)
+                new DescriptionRequest(
+                        product.getDescription().getShortDescription(),
+                        product.getDescription().getDescription(),
+                        keyFeatures
+                )
         );
         List<byte[]> images = new ArrayList<>(6);
         product.getImageList().forEach((productImage -> {

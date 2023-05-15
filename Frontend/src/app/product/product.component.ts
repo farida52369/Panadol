@@ -1,107 +1,116 @@
-import { Component } from "@angular/core";
-import { Router } from "@angular/router";
-import { CartService } from "../cart/cart.service";
+import { Component, OnInit } from "@angular/core";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { ActivatedRoute, Router } from "@angular/router";
 import { ProductService } from "../services/product/product.service";
-import { CartRequestPayload } from "../cart/cart-request.payload";
+import { SpecificProductInfoPayload } from "../offer-product/offer-product-payload/specific-product-info.payload";
+import { StarTypesPayload } from "../stars-rate/star-types.payload";
+import { RateHandle } from "../common/rate-handle";
 @Component({
   selector: "app-product",
   templateUrl: "./product.component.html",
   styleUrls: ["./product.component.css"],
 })
-export class ProductComponent {
-  isOwner: boolean = false;
-  product: any;
-  noPriceEditing: boolean = true;
-  noInStockEditing: boolean = true;
-  noCategoryEdit: boolean = true;
-  noTitleEdit: boolean = true;
-  noDescriptionEditing: boolean = true;
+export class ProductComponent implements OnInit {
+  Number(arg0: string) {
+    throw new Error("Method not implemented.");
+  }
+  main_image: any;
+  title: any =
+    "DREAM PAIRS Kitten Heels for Women Comfortable Low Heels Sandals Suqare Open Toe Cute Wedding Party Evening Prom Dance Strap Dress Pump Sandals Shoes";
+  numOfReviews: any = 220;
+  price: any = 233.78;
+  shortDescription: any =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
+  longDescription: any =
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
+  keyFeatures: Array<string> = [
+    "HELLO WORLD",
+    "HELLO WORLD",
+    "HELLO WORLD",
+    "HELLO WORLD",
+    "HELLO WORLD",
+  ];
 
-  toCart: CartRequestPayload = {
-    productId: 0,
-    title: "",
-    price: 0,
-    inStock: 0,
-    description: "",
-    image: "",
-    quantity: 0,
-  };
+  numOfComments: any = 1;
+  ratingOverall: any = 4.5;
+  comments: any = [
+    {
+      name: "Fareeda Ragab",
+      rate: 4.5,
+      comment:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit,",
+    },
+    {
+      name: "Eman Ragab",
+      rate: 4.8,
+      comment:
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet, consectetur adipiscing elit,",
+    },
+  ];
 
+  images = [
+    "assets/images/modal1.png",
+    "assets/images/bx-slider1.jpg",
+    "assets/images/bx-slider1.jpg",
+    "assets/images/bx-slider1.jpg",
+  ];
+
+  commentForm!: FormGroup;
+
+  rating: number = 0;
+  quantity: number = 1;
+
+  productId!: number;
+  currentProduct!: SpecificProductInfoPayload;
+  currentProductRate!: StarTypesPayload;
   constructor(
-    private productService: ProductService,
     private router: Router,
-    private cartService: CartService
+    private route: ActivatedRoute,
+    private productService: ProductService
   ) {}
 
   ngOnInit(): void {
-    this.product = this.productService.getAllInfo();
-    this.isOwner = this.product.isOwner;
+    this.route.queryParams.subscribe((params) => {
+      this.productId = params["productId"];
+      console.log("Product Id: " + this.productId);
+      this.productService.getSpecificProduct(this.productId).subscribe({
+        next: (res) => {
+          this.currentProduct = res;
+          console.log(this.currentProduct);
+          this.currentProductRate = RateHandle.getSuitableRate(
+            this.currentProduct.basicInfo.rate
+          );
+          this.main_image = this.currentProduct.images[0];
+        },
+      });
+    });
+    this.initForm();
   }
 
-  editPrice() {
-    this.noPriceEditing = false;
-  }
-  exitEditPrice() {
-    this.noPriceEditing = true;
-    this.product.price = (<HTMLInputElement>(
-      document.getElementById("price_after_edit")
-    )).value;
+  setRating(i: any) {
+    console.log(`I: ${i}`);
+    this.rating = i;
   }
 
-  editInStock() {
-    this.noInStockEditing = false;
-  }
-  exitEditInStock() {
-    this.noInStockEditing = true;
-    this.product.inStock = (<HTMLInputElement>(
-      document.getElementById("inStock_after_edit")
-    )).value;
+  private initForm() {
+    this.commentForm = new FormGroup({
+      rate: new FormControl("", [Validators.required]),
+      comment: new FormControl("", [Validators.required]),
+    });
   }
 
-  editCategory() {
-    this.noCategoryEdit = false;
-  }
-  exitEditCategory() {
-    this.noCategoryEdit = true;
-    this.product.category = (<HTMLInputElement>(
-      document.getElementById("cat_after_edit")
-    )).value;
+  changeImage(element: any) {
+    // const src = element.target.getAttribute('src');
+    // this.main_image = element.src;
+    this.main_image = element;
+    console.log(`Router: ${this.router.url}`);
   }
 
-  editTitle() {
-    this.noTitleEdit = false;
-  }
-  exitEditTitle() {
-    this.noTitleEdit = true;
-    this.product.title = (<HTMLInputElement>(
-      document.getElementById("title_after_edit")
-    )).value;
+  getReviews() {
+    console.log(`Router: ${this.router.url}`);
   }
 
-  editDescription() {
-    this.noDescriptionEditing = false;
-  }
-  exitEditDescription() {
-    this.noDescriptionEditing = true;
-    this.product.description = (<HTMLInputElement>(
-      document.getElementById("desc_after_edit")
-    )).value;
-  }
+  decreaseQuantity() {}
 
-  backHome() {
-    this.router.navigateByUrl("home", { state: { logged: true } });
-  }
-
-  addToCart() {
-    this.toCart = this.product;
-    this.toCart.quantity = 1;
-
-    this.cartService.storageCart(this.toCart);
-    let ele = document.getElementById("to-cart");
-    if (ele) {
-      ele.style.display = "block";
-      ele.style.color = "black";
-      ele.style.paddingLeft = "10px";
-    }
-  }
+  increaseQuantity() {}
 }

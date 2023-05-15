@@ -81,6 +81,7 @@ public class CreateProduct {
 
     private ProductDescription getProductDescription(DescriptionRequest descriptionRequest) {
         ProductDescription description = new ProductDescription();
+        description.setShortDescription(descriptionRequest.getShortDescription());
         description.setDescription(descriptionRequest.getDescription());
         description.setKeyFeatures(descriptionRequest.getKeyFeatures());
         return description;

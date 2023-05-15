@@ -5,8 +5,10 @@ import com.example.panadol.model.auth.seller.IdentityInfo;
 import com.example.panadol.model.auth.seller.NationalId;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
 @Mapper(componentModel = "spring")
+@Component
 public interface IdentityInfoMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "nationalID", source = "nationalId")

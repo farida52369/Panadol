@@ -6,11 +6,13 @@ import com.example.panadol.model.product.ProductImage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring") // Works as Bean
+@Component
 public interface ProductAbstractionMapper {
 
     @Mapping(target = "productId", source = "productId", qualifiedByName = "longToString")
