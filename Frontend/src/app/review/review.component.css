@@ -1,0 +1,55 @@
+/* Comment Review */
+.comment-review {
+  margin-bottom: 6px;
+}
+
+.comment-review .add-review {
+  margin-top: 30px;
+}
+
+.form-card h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.comment-review .add-review p {
+  color: #333;
+}
+
+.comment-review h4,
+.write-review h4 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 7px;
+  margin-top: 20px;
+  cursor: text;
+}
+
+textarea {
+  border-radius: 0px;
+}
+
+.mat-icon-star.filled {
+  color: rgb(247, 161, 0);
+}
+
+.form-card .btn-primary {
+  height: 45px;
+  width: auto;
+  padding: 0 42px;
+  line-height: 45px;
+  text-align: center;
+  text-transform: capitalize;
+  margin-right: 5px;
+  border-radius: 0px;
+  background: #333 !important;
+  color: #fff;
+  display: inline-block;
+  font-weight: 500;
+}
+
+.form-card .btn-primary:hover {
+  color: #fff;
+  background-color: #f7941d !important;
+}

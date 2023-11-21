@@ -129,8 +129,7 @@
   display: inline-block;
 }
 
-.add-to-cart .btn,
-.form-card .btn-primary {
+.add-to-cart .btn {
   height: 45px;
   width: auto;
   padding: 0 42px;
@@ -296,49 +295,4 @@
   color: #666;
   font-size: 13px;
   margin-left: 10px;
-}
-
-/* Comment Review */
-.comment-review {
-  margin-bottom: 6px;
-}
-
-.comment-review .add-review {
-  margin-top: 30px;
-}
-
-.form-card h3 {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 7px;
-}
-
-.comment-review .add-review p {
-  color: #333;
-}
-
-.comment-review h4,
-.write-review h4 {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 7px;
-  margin-top: 20px;
-  cursor: text;
-}
-
-.comment-review .rating li {
-  display: inline-block;
-}
-
-.comment-review .rating li i {
-  color: #f7941d;
-  font-size: 14px;
-}
-
-textarea {
-  border-radius: 0px;
-}
-
-.mat-icon-star.filled {
-  color: rgb(247, 161, 0);
 }

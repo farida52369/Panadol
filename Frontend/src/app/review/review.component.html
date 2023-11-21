@@ -1,0 +1,39 @@
+<form class="form-card" [formGroup]="reviewForm" (ngSubmit)="submitReview()">
+  <h3>Add A Review</h3>
+  <p>Your email address will not be published. Required fields are marked *</p>
+  <div class="comment-review">
+    <div class="add-review">
+      <h4>Your Rating *</h4>
+      <div class="ratings">
+        <mat-icon
+          *ngFor="let i of [1, 2, 3, 4, 5]"
+          (click)="setRating(i)"
+          class="mat-icon-star"
+          [ngClass]="rating >= i ? 'filled' : 'border-star'"
+        >
+          {{ rating >= i ? "star" : "star_border" }}
+        </mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <label for="description-comment" class="form-label write-review">
+      <h4>Write a review *</h4>
+    </label>
+  </div>
+  <div class="row mb-4">
+    <textarea
+      class="form-control"
+      id="description-comment"
+      formControlName="comment"
+      rows="4"
+      placeholder="Write your review hereeee .."
+    ></textarea>
+  </div>
+  <div class="align-center">
+    <button class="btn btn-primary" [disabled]="!reviewForm.valid">
+      Share Comment
+    </button>
+  </div>
+</form>

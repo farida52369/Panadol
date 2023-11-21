@@ -27,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { StarsRateComponent } from './stars-rate/stars-rate.component';
 import { OfferProductComponent } from './offer-product/offer-product.component';
 import { QuantityComponent } from './quantity/quantity.component';
+import { ReviewComponent } from './review/review.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { QuantityComponent } from './quantity/quantity.component';
     SideBarComponent,
     StarsRateComponent,
     OfferProductComponent,
-    QuantityComponent
+    QuantityComponent,
+    ReviewComponent
   ],
   imports: [
     BrowserModule,

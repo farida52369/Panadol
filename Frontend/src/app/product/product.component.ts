@@ -5,34 +5,17 @@ import { ProductService } from "../services/product/product.service";
 import { SpecificProductInfoPayload } from "../offer-product/offer-product-payload/specific-product-info.payload";
 import { StarTypesPayload } from "../stars-rate/star-types.payload";
 import { RateHandle } from "../common/rate-handle";
+import { ReviewResponsePayload } from "../review/review-response.payload";
+import { ReviewService } from "../review/review.service";
 @Component({
   selector: "app-product",
   templateUrl: "./product.component.html",
   styleUrls: ["./product.component.css"],
 })
 export class ProductComponent implements OnInit {
-  Number(arg0: string) {
-    throw new Error("Method not implemented.");
-  }
   main_image: any;
-  title: any =
-    "DREAM PAIRS Kitten Heels for Women Comfortable Low Heels Sandals Suqare Open Toe Cute Wedding Party Evening Prom Dance Strap Dress Pump Sandals Shoes";
-  numOfReviews: any = 220;
-  price: any = 233.78;
-  shortDescription: any =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
-  longDescription: any =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliquaLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
-  keyFeatures: Array<string> = [
-    "HELLO WORLD",
-    "HELLO WORLD",
-    "HELLO WORLD",
-    "HELLO WORLD",
-    "HELLO WORLD",
-  ];
-
+  numOfReviews: number = 2;
   numOfComments: any = 1;
-  ratingOverall: any = 4.5;
   comments: any = [
     {
       name: "Fareeda Ragab",
@@ -48,31 +31,22 @@ export class ProductComponent implements OnInit {
     },
   ];
 
-  images = [
-    "assets/images/modal1.png",
-    "assets/images/bx-slider1.jpg",
-    "assets/images/bx-slider1.jpg",
-    "assets/images/bx-slider1.jpg",
-  ];
-
-  commentForm!: FormGroup;
-
-  rating: number = 0;
-  quantity: number = 1;
-
   productId!: number;
   currentProduct!: SpecificProductInfoPayload;
   currentProductRate!: StarTypesPayload;
+  productReviews!: Array<ReviewResponsePayload>;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private reviewsService: ReviewService
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       this.productId = params["productId"];
-      console.log("Product Id: " + this.productId);
+      // console.log("Product Id: " + this.productId);
       this.productService.getSpecificProduct(this.productId).subscribe({
         next: (res) => {
           this.currentProduct = res;
@@ -83,19 +57,6 @@ export class ProductComponent implements OnInit {
           this.main_image = this.currentProduct.images[0];
         },
       });
-    });
-    this.initForm();
-  }
-
-  setRating(i: any) {
-    console.log(`I: ${i}`);
-    this.rating = i;
-  }
-
-  private initForm() {
-    this.commentForm = new FormGroup({
-      rate: new FormControl("", [Validators.required]),
-      comment: new FormControl("", [Validators.required]),
     });
   }
 
@@ -108,9 +69,11 @@ export class ProductComponent implements OnInit {
 
   getReviews() {
     console.log(`Router: ${this.router.url}`);
+    this.reviewsService.getProductReviews(this.productId).subscribe({
+      next: (res) => {
+        this.productReviews = res;
+        console.log("We got All Product Reviews");
+      },
+    });
   }
-
-  decreaseQuantity() {}
-
-  increaseQuantity() {}
 }

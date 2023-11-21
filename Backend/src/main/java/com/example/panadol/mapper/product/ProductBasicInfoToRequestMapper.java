@@ -13,5 +13,6 @@ public interface ProductBasicInfoToRequestMapper {
     @Mapping(target = "price", source = "price")
     @Mapping(target = "category", source = "category")
     @Mapping(target = "inStock", source = "inStock")
+    @Mapping(target = "rate", source = "rate")
     BasicInfoRequest map(ProductBasicInfo productBasicInfo);
 }

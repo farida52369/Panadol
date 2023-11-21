@@ -9,6 +9,7 @@ import com.example.panadol.model.auth.AppUser;
 import com.example.panadol.model.product.Product;
 import com.example.panadol.repository.product.ProductRepository;
 import com.example.panadol.service.auth.AuthService;
+import com.example.panadol.service.review.ReviewService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,15 @@ public class ProductService {
     private final AuthService authService;
     private final ProductBasicInfoToRequestMapper productBasicInfoToRequestMapper;
     private final ProductAbstractionMapper abstractionMapper;
+    private final ReviewService reviewService;
+
+    public Product getProductById(final Long productId) {
+        return productRepository.getById(productId);
+    }
+
+    public void updateProduct(final Product product) {
+        productRepository.save(product);
+    }
 
     public List<SomeProductInfoResponse> getAllProducts(final int offset, final int limit) {
         log.info("Offset: {}, Limit: {}", offset, limit);
@@ -58,6 +68,8 @@ public class ProductService {
 
     public EditableProductInfoResponse getSpecificProduct(final Long id) {
         Product product = productRepository.getById(id);
+        // Update average rating
+        reviewService.updateAverageRating(id);
         EditableProductInfoResponse productInfoResponse = new EditableProductInfoResponse();
         productInfoResponse.setBasicInfo(productBasicInfoToRequestMapper.map(product.getBasicInfo()));
         List<String> keyFeatures = product.getDescription().getKeyFeatures();
