@@ -67,6 +67,8 @@ export class ProductComponent implements OnInit {
     console.log(`Router: ${this.router.url}`);
   }
 
+  addToCart() {}
+
   getReviews() {
     console.log(`Router: ${this.router.url}`);
     this.reviewsService.getProductReviews(this.productId).subscribe({

@@ -25,6 +25,7 @@ export class CartComponent implements OnInit {
 
   setCartProducts() {
     this.product = this.cartService.getCart();
+    console.log(this.product)
   }
 
   viewProduct(productId: number) {
