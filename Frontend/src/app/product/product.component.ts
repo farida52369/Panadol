@@ -7,6 +7,7 @@ import { StarTypesPayload } from "../stars-rate/star-types.payload";
 import { RateHandle } from "../common/rate-handle";
 import { ReviewResponsePayload } from "../review/review-response.payload";
 import { ReviewService } from "../review/review.service";
+import { CartService } from "../cart/cart.service";
 @Component({
   selector: "app-product",
   templateUrl: "./product.component.html",
@@ -40,7 +41,8 @@ export class ProductComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private productService: ProductService,
-    private reviewsService: ReviewService
+    private reviewsService: ReviewService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -67,13 +69,30 @@ export class ProductComponent implements OnInit {
     console.log(`Router: ${this.router.url}`);
   }
 
+  addToCart() {
+    console.log(this.currentProduct)
+    
+    this.cartService.save({
+      productId: this.productId,
+      image: this.currentProduct.images.at(0),
+      title: this.currentProduct.basicInfo.title,
+      description: this.currentProduct.description.description,
+      price: Number(this.currentProduct.basicInfo.price),
+      inStock: this.currentProduct.basicInfo.inStock,
+      quantity: 1
+    })
+  
+  }
+
   getReviews() {
     console.log(`Router: ${this.router.url}`);
+    /*
     this.reviewsService.getProductReviews(this.productId).subscribe({
       next: (res) => {
         this.productReviews = res;
         console.log("We got All Product Reviews");
       },
     });
+    */
   }
 }

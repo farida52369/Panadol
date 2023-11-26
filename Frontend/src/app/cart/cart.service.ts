@@ -10,7 +10,7 @@ export class CartService {
 
   private cartProducts: Array<CartRequestPayload> = [];
 
-  public storageCart(product: CartRequestPayload) {
+  public save(product: CartRequestPayload) {
     this.cartProducts = this.getCart();
 
     const productExists = this.cartProducts.find(

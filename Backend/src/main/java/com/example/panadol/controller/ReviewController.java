@@ -1,14 +1,9 @@
 package com.example.panadol.controller;
 
-import com.example.panadol.dto.review.ReviewRequest;
-import com.example.panadol.service.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -16,7 +11,9 @@ import java.util.List;
 @RequestMapping("/api/product")
 public class ReviewController {
 
-    private ReviewService reviewService;
+    /*
+     *
+    private final ReviewService reviewService;
 
     @PostMapping(
             consumes = {"application/json"},
@@ -36,4 +33,5 @@ public class ReviewController {
         // log.info("Getting All Products .. ");
         return ResponseEntity.ok().body(reviewService.getAllReviews(productId));
     }
+    */
 }

@@ -25,6 +25,7 @@ export class CartComponent implements OnInit {
 
   setCartProducts() {
     this.product = this.cartService.getCart();
+    console.log(this.product)
   }
 
   viewProduct(productId: number) {
@@ -53,7 +54,7 @@ export class CartComponent implements OnInit {
     );
     if (this.product[id].inStock <= this.product[id].quantity) return;
     this.product[id].quantity++;
-    this.cartService.storageCart(this.product[id]);
+    this.cartService.save(this.product[id]);
     this.updateTotals();
   }
 
@@ -61,7 +62,7 @@ export class CartComponent implements OnInit {
     let quantity = this.product[id].quantity;
     if (quantity > 1) {
       this.product[id].quantity--;
-      this.cartService.storageCart(this.product[id]);
+      this.cartService.save(this.product[id]);
       this.updateTotals();
     }
   }

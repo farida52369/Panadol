@@ -69,7 +69,7 @@ public class ProductService {
     public EditableProductInfoResponse getSpecificProduct(final Long id) {
         Product product = productRepository.getById(id);
         // Update average rating
-        reviewService.updateAverageRating(id);
+        // reviewService.updateAverageRating(id);
         EditableProductInfoResponse productInfoResponse = new EditableProductInfoResponse();
         productInfoResponse.setBasicInfo(productBasicInfoToRequestMapper.map(product.getBasicInfo()));
         List<String> keyFeatures = product.getDescription().getKeyFeatures();

@@ -1,16 +1,9 @@
 package com.example.panadol.service.review;
 
-import com.example.panadol.dto.review.ReviewRequest;
-import com.example.panadol.mapper.review.ReviewMapper;
-import com.example.panadol.model.product.Product;
-import com.example.panadol.repository.review.ReviewRepository;
-import com.example.panadol.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -18,9 +11,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private ProductService productService;
-    private ReviewRepository reviewRepository;
-    private ReviewMapper reviewMapper;
+    /*
+     *
+    private final ProductService productService;
+    private final ReviewRepository reviewRepository;
+    private final ReviewMapper reviewMapper;
 
     public void saveReview(final ReviewRequest reviewRequest) {
         // Save Review
@@ -28,6 +23,8 @@ public class ReviewService {
     }
 
     public void updateAverageRating(final Long productId) {
+        System.out.println(productService);
+        System.out.println(productService.getProductById(productId));
         Product product = productService.getProductById(productId);
 
         // calculate the new average rating for the product
@@ -40,4 +37,5 @@ public class ReviewService {
         Product product = productService.getProductById(productId);
         return reviewRepository.findReviewRequestsByProduct(product);
     }
+    */
 }
