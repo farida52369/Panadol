@@ -70,8 +70,6 @@ export class ProductComponent implements OnInit {
   }
 
   addToCart() {
-    console.log(this.currentProduct)
-    
     this.cartService.save({
       productId: this.productId,
       image: this.currentProduct.images.at(0),
@@ -81,7 +79,6 @@ export class ProductComponent implements OnInit {
       inStock: this.currentProduct.basicInfo.inStock,
       quantity: 1
     })
-  
   }
 
   getReviews() {
